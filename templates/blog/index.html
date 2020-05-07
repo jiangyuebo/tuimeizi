@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="flex-container">
+{% for poster_cover_dic in posters_covers_list %}
+    <div class="index-image-block-container">
+        <a href="{{ poster_cover_dic.poster.get_absolute_url }}">
+            <img class="index-image" src={{ poster_cover_dic.cover.get_media_display_path }} alt="{{ poster_cover_dic.poster.user_screen_name }}">
+            <div class="index-image-font-div">{{ poster_cover_dic.poster.user_name }}</div>
+        </a>
+    </div>
+{% endfor %}
+</div>
+<div class="paginator">
+    <span>
+        {% if media_list.has_previous %}
+            <a href="?page={{ media_list.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        {% if media_list.count > 12 %}
+            <span class="current">
+            {{ media_list.number }} / {{ media_list.paginator.num_pages }}
+            </span>
+        {% else %}
+            1
+        {% endif %}
+
+        {% if media_list.has_next %}
+            <a href="?page={{ media_list.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock main %}

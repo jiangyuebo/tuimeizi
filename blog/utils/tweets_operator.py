@@ -1,0 +1,407 @@
+import datetime
+import tweepy
+import time
+import random
+
+import os, urllib.request
+from django.utils import timezone
+
+from threading import Timer
+from blog.models import Poster, Media
+
+one_fetch_tweets_count = 200
+
+
+def setup_poster_and_fetch_tweets(screen_name, category):
+    poster = install_poster_into_database(screen_name, category)
+    fetch_all_tweets_from_poster(poster)
+
+
+# tweepy init
+def init_my_tweepy():
+    auth = tweepy.OAuthHandler('mUAXhVuRst8HCFUrwXhhY268y',
+                               'xkD9RfnCZLizOEVBXT6MxGHBQ6ADBQDd2cFpIrQeuobKwGrXJz')
+    auth.set_access_token("273242373-TZGgTaBVAYt4n9Cah8qy4tMLHjGZ0Nsx91F8XXBZ",
+                          'Sib2WGUfQsyn9o26uA9W1dImtHtgTFlk3SHOTZZiA0oQ1')
+    api = tweepy.API(auth)
+    return api
+
+
+# 插入poster 参数：screen_name(poster名)/category_id(分类ID)
+def install_poster_into_database(screen_name, category):
+    api = init_my_tweepy()
+    poster = fetch_twitter_poster_info_by_screen_name(api, screen_name)
+
+    if poster is not None:
+        # set poster's category
+        poster.category = category
+        # save poster info
+        save_poster_data_into_database(poster)
+        return poster
+    else:
+        print('poster is none')
+
+
+# 通过screen name获取twitter用户信息
+def fetch_twitter_poster_info_by_screen_name(api, user_screen_name):
+    if api is not None:
+        poster_info = api.get_user(user_screen_name)
+        if poster_info is not None:
+            poster_info_dic = poster_info._json
+            # 获取poster数据
+            id_str = poster_info_dic['id_str']
+            name = poster_info_dic['name']
+            screen_name = poster_info_dic['screen_name']
+
+            poster = Poster(user_id_str=id_str, user_screen_name=screen_name, user_name=name)
+            return poster
+        else:
+            print('未找到 poster 相关数据')
+    else:
+        print('api 对象是None')
+
+
+# 存储poster数据到数据库
+def save_poster_data_into_database(poster):
+    if poster is not None:
+        # 检查是否已存在
+        try:
+            Poster.objects.get(user_id_str=poster.user_id_str)
+            print('poster %s(%s) 已存在' % (poster.user_screen_name, poster.user_id_str))
+        except Poster.DoesNotExist:
+            poster.save()
+            print('poster %s(%s) 已存入数据库' % (poster.user_screen_name, poster.user_id_str))
+    else:
+        print('poster is None')
+
+
+# 获取目标用户组
+def load_target_posters():
+    try:
+        poster_list = Poster.objects.all()
+        return poster_list
+    except Poster.DoesNotExist:
+        print('无目标 poster 存在')
+
+
+# 抓取并存储所有目标poster的推文
+def fetch_tweets_data_from_target_posters():
+    api = init_my_tweepy()
+    poster_list = load_target_posters()
+
+    if api is not None and poster_list is not None and len(poster_list) > 0:
+        for poster in poster_list:
+            # 判断当前poster是否已经获取过推文
+            exsist_tweets = Media.objects.filter(user_id_str=poster.user_id_str)
+            if len(exsist_tweets) > 0:
+                # 已获取过推
+                fetch_latest_tweets_from_poster(api, exsist_tweets, poster)
+            else:
+                # 未获取过
+                print('%s 未获取过，开始全量获取, 第一次获取' % poster.user_screen_name)
+                fetch_all_tweets_from_poster(poster)
+    else:
+        print('api is none or poster_list is none or poster_list is empty')
+
+
+# 获取指定poster全量推文
+def fetch_all_tweets_from_poster(poster):
+    api = init_my_tweepy()
+
+    print('%s 未获取过，开始全量获取, 第一次获取' % poster.user_screen_name)
+    all_tweets = []
+    new_tweets = api.user_timeline(screen_name=poster.user_screen_name, count=one_fetch_tweets_count)
+    # 缓存推文
+    all_tweets.extend(new_tweets)
+    # 保存最老推文ID
+    oldest = get_the_oldest_tweet_id(all_tweets)
+    print('------------------->>> oldest: ', oldest)
+    while len(new_tweets) > 0:
+        is_finished = 0
+        while is_finished == 0:
+            try:
+                new_tweets = api.user_timeline(screen_name=poster.user_screen_name,
+                                               count=one_fetch_tweets_count, max_id=oldest)
+                is_finished = 1
+            except Exception as e:
+                print(e)
+                time.sleep(random.choice(range(300, 600)))
+                is_finished = 0
+        # save
+        all_tweets.extend(new_tweets)
+        oldest = get_the_oldest_tweet_id(all_tweets)
+        print('*** *** 已获取推文条数：', len(all_tweets))
+
+    # 处理返回推文
+    tweetsOperator(all_tweets)
+
+
+# 获取最新推文
+def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
+    print('%s 已获取过推文，开始获取更新' % poster.user_screen_name)
+    latest_post_id = exsist_tweets[0].post_id_str
+
+    all_tweets = []
+    flag = True
+    print('------------------->>> latest: ', latest_post_id)
+    while flag:
+        is_finished = 0
+        while is_finished == 0:
+            try:
+                new_tweets = api.user_timeline(screen_name=poster.user_screen_name,
+                                               count=one_fetch_tweets_count, since_id=latest_post_id)
+                is_finished = 1
+                if len(new_tweets) > 0:
+                    flag = True
+                else:
+                    flag = False
+            except Exception as e:
+                print(e)
+                time.sleep(random.choice(range(300, 600)))
+                is_finished = 0
+        print('new_tweets count : ', len(new_tweets))
+
+
+        # save
+        if new_tweets is not None and len(new_tweets) > 0:
+            if all_tweets is not None and len(all_tweets) > 0:
+                all_tweets = new_tweets.extend(all_tweets)
+                tweet = all_tweets[0]
+                latest_post_id = tweet.id + 1
+            else:
+                all_tweets = new_tweets
+                tweet = all_tweets[0]
+                latest_post_id = tweet.id + 1
+
+            print('*** *** 已获取推文条数：', len(all_tweets))
+        else:
+            print('无更新推文')
+
+    if len(all_tweets) > 0:
+        # 处理返回推文
+        tweetsOperator(all_tweets)
+    else:
+        print('无更新推文')
+
+
+# 获取最老推文ID
+def get_the_oldest_tweet_id(all_tweets):
+    return all_tweets[-1].id - 1
+
+
+# 推文数据处理方法
+# statusData tweepy获取到的数据集合
+def tweetsOperator(statusDatas):
+    index = 0
+    if len(statusDatas) > 0:
+        print('推文数量：', len(statusDatas))
+        for status in statusDatas:
+            print('****** ****** tweet index:', index)
+            status_json_dic = status._json
+
+            # 获取用户及推文信息
+            # 创建时间
+            created_at = status_json_dic['created_at']
+            # python date
+            created_at_python_date = transform_twitter_date_to_python_date(created_at)
+            # 推文ID
+            post_id_str = status_json_dic['id_str']
+            # 推文文字
+            post_text = status_json_dic['text']
+
+            user_info_dic = status_json_dic['user']
+            user_id_str = user_info_dic['id_str']
+            user_screen_name = user_info_dic['screen_name']
+
+            # 判断不是转推
+            if 'retweeted_status' not in status_json_dic:
+                # 判断字典中是否有extended_entities字段，有的话说明有多个媒体文件
+                if 'extended_entities' in status_json_dic:
+                    # 获取媒体字段
+                    extended_entities_dic = status_json_dic['extended_entities']
+                    media_list = extended_entities_dic['media']
+
+                    for media in media_list:
+                        media_id_str = media['id_str']
+                        media_type = media['type']
+                        media_url = media['media_url']
+
+                        print('media type:', media_type)
+                        print('media_url:', media_url)
+
+                        # 图片名称
+                        photo_file_name = os.path.basename(media_url)
+                        # 获取存储全路径
+                        dest_file_full_path = get_file_local_full_path(user_screen_name, photo_file_name)
+
+                        media_data = Media(
+                            user_id_str=user_id_str,
+                            post_id_str=post_id_str,
+                            post_text=post_text,
+                            media_id_str=media_id_str,
+                            media_type=media_type,
+                            remote_url=media_url,
+                            created_at=created_at_python_date,
+                            local_url=dest_file_full_path,
+                            is_cover=False
+                        )
+
+                        save_media_data_into_database(media_data)
+                        # 获取文件夹路径
+                        dest_dev_path = get_poster_local_store_dev_path(user_screen_name)
+                        # 存储图片
+                        download_file_from_url(dest_dev_path, dest_file_full_path, media_url)
+
+                        if media_type == 'video':
+                            video_info_list = media['video_info']['variants']
+                            bitrate_temp = 0
+                            best_video_url = ""
+                            video_file_name = ""
+                            # 获取最高清视频地址
+                            for video_info in video_info_list:
+                                if 'bitrate' in video_info:
+                                    bitrate = video_info['bitrate']
+                                    if bitrate > bitrate_temp:
+                                        bitrate_temp = bitrate
+                                        best_video_url = video_info['url']
+
+                            video_file_name_str = os.path.basename(best_video_url)
+                            if '?' in video_file_name_str:
+                                video_file_name = video_file_name_str.split("?")[0]
+                            else:
+                                video_file_name = video_file_name_str
+
+                            # 下载视频
+                            if len(video_file_name) > 0:
+                                print('video url :', best_video_url)
+                                http_video_url = best_video_url.replace("https", "http")
+                                print('http_video_url:', http_video_url)
+                                dest_video_full_path = get_file_local_full_path(user_screen_name, video_file_name)
+
+                                # 存储视频媒体数据到数据库
+                                media_just_saved = load_media_data_from_database(media_data)
+                                if media_just_saved is not None:
+                                    media_just_saved.local_video_url = dest_video_full_path
+                                    media_just_saved.save()
+                                    print('视频文件数据已存入数据库，文件:', dest_video_full_path)
+                                else:
+                                    print('视频文件数据未存储')
+
+                                # 下载视频媒体文件
+                                download_file_from_url(dest_dev_path, dest_video_full_path, http_video_url)
+                            else:
+                                print('video_file_name is null')
+
+                else:
+                    print('无 extended_entities 字段，text: ', status_json_dic['text'])
+                    print(status_json_dic)
+            else:
+                print('是转推')
+
+            index = index + 1
+        print('=== 推文数据处理完毕 ===')
+    else:
+        print('tweepy 未返回数据')
+
+
+# 转换twitter date 成 python date
+def transform_twitter_date_to_python_date(twitter_date):
+    if twitter_date is not None and len(twitter_date) > 0:
+        ts = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(twitter_date, '%a %b %d %H:%M:%S +0000 %Y'))
+        # 获取年月日
+        year_str = time.strftime('%Y', time.strptime(twitter_date, '%a %b %d %H:%M:%S +0000 %Y'))
+        month_str = time.strftime('%m', time.strptime(twitter_date, '%a %b %d %H:%M:%S +0000 %Y'))
+        day_str = time.strftime('%d', time.strptime(twitter_date, '%a %b %d %H:%M:%S +0000 %Y'))
+        # 创建 python date
+        python_date = datetime.date(int(year_str), int(month_str), int(day_str))
+        return python_date
+    else:
+        print('twitter date in none or empty')
+
+
+# 获取文件本地存储全路径
+def get_file_local_full_path(poster_screen_name, file_name):
+    dest_dev = get_poster_local_store_dev_path(poster_screen_name)
+    # 文件全路径
+    media_local_full_path = os.path.join(dest_dev, file_name)
+    return media_local_full_path
+
+
+# 获取目标poster本地存储文件夹路径
+def get_poster_local_store_dev_path(poster_screen_name):
+    # 获取工程路径
+    project_path = os.getcwd()
+    media_store_path = project_path + "/" + "media/"
+    # 存储文件夹路径
+    dest_dev = media_store_path + poster_screen_name
+    return dest_dev
+
+
+# 存储media数据到数据库
+def save_media_data_into_database(media):
+    if media is not None:
+        # 检查是否已存在
+        try:
+            Media.objects.get(media_id_str=media.media_id_str)
+            print('media %s 已存在' % media.media_id_str)
+        except Media.DoesNotExist:
+            media.save()
+            print('media %s 已存入数据库' % media.media_id_str)
+    else:
+        print('media is None')
+
+
+# 下载文件到本地
+# 用户名/文件名/下载URL
+def download_file_from_url(store_dev, store_full_path, url):
+    try:
+        # 判断文件夹是否存在，不存在责创建
+        if not os.path.exists(store_dev):
+            os.makedirs(store_dev)
+        # 判断文件是否存在
+        if os.path.isfile(store_full_path):
+            # 已存在
+            print('文件：%s 已存在' % store_full_path)
+        else:
+            # 不存在，下载
+            urllib.request.urlretrieve(url, store_full_path)
+    except Exception as e:
+        print('error :', e)
+
+        # 下载文件到本地
+        # 用户名/文件名/下载URL
+        def download_file_from_url(store_dev, store_full_path, url):
+            try:
+                # 判断文件夹是否存在，不存在责创建
+                if not os.path.exists(store_dev):
+                    os.makedirs(store_dev)
+                # 判断文件是否存在
+                if os.path.isfile(store_full_path):
+                    # 已存在
+                    print('文件：%s 已存在' % store_full_path)
+                else:
+                    # 不存在，下载
+                    urllib.request.urlretrieve(url, store_full_path)
+            except Exception as e:
+                print('error :', e)
+
+
+# 读取media数据
+def load_media_data_from_database(media):
+    if media is not None:
+        try:
+
+            media_selected = Media.objects.get(post_id_str=media.post_id_str)
+            return media_selected
+        except Media.DoesNotExist:
+            print('media post id(%s) 不存在' % media.post_id_str)
+    else:
+        print('media is none')
+
+
+def timer_operation():
+    print('执行时间 ：', timezone.now)
+    fetch_tweets_data_from_target_posters()
+    s_timer = Timer(60 * 60 * 12, timer_operation)
+    s_timer.start()
+

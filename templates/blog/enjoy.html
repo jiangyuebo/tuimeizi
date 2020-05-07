@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="enjoy-image-div">
+    {% if media.media_type == 'video' %}
+    <video controls>
+        <source src="{{ media.get_video_display_path }}">
+    </video>
+    <div style="color: white;">{{ media.post_text }}</div>
+    {% else %}
+    <img src="{{media.get_media_display_path}}">
+    <div style="color: white;">{{ media.post_text }}</div>
+    {% endif %}
+</div>
+{% endblock main %}
+{% block toc %}
+<div class="widget widget-content">
+    <h3 class="widget-title">文章目录</h3>
+    <ul>
+        <li>
+            <a href="#">教程特点</a>
+        </li>
+        <li>
+            <a href="#">谁适合这个教程</a>
+        </li>
+        <li>
+            <a href="#">在线预览</a>
+        </li>
+        <li>
+            <a href="#">资源列表</a>
+        </li>
+        <li>
+            <a href="#">获取帮助</a>
+        </li>
+    </ul>
+</div>
+{% endblock toc %}

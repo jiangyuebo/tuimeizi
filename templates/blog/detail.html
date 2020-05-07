@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="flex-container">
+{% for media in media_list %}
+    {% if media.media_type == 'video' %}
+        <a href="{{media.get_absolute_url}}">
+            <div class="detail-movie-image-cover" backgroud="">
+                <img class="detail-movie-image"  src={{ media.get_media_display_path }}>
+                <img class="detail-movie-image-flag" src="/static/image/play.png">
+            </div>
+        </a>
+    {% else %}
+        <div >
+            <a href="{{media.get_absolute_url}}">
+                <img class="index-image" src={{ media.get_media_display_path }} alt="{{ media.post_text }}">
+            </a>
+        </div>
+    {% endif %}
+{% endfor %}
+</div>
+<div class="paginator">
+    <span>
+        {% if media_list.has_previous %}
+            <a href="?page={{ media_list.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current">
+            {{ media_list.number }} / {{ media_list.paginator.num_pages }}
+        </span>
+
+        {% if media_list.has_next %}
+            <a href="?page={{ media_list.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock main %}
+{% block toc %}
+<div class="widget widget-content">
+    <h3 class="widget-title">文章目录</h3>
+    <ul>
+        <li>
+            <a href="#">教程特点</a>
+        </li>
+        <li>
+            <a href="#">谁适合这个教程</a>
+        </li>
+        <li>
+            <a href="#">在线预览</a>
+        </li>
+        <li>
+            <a href="#">资源列表</a>
+        </li>
+        <li>
+            <a href="#">获取帮助</a>
+        </li>
+    </ul>
+</div>
+{% endblock toc %}
