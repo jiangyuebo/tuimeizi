@@ -123,10 +123,8 @@ class Media(models.Model):
         return path
 
     def get_video_display_path(self):
-        print('****** get_video_display_path ******')
         path_list = self.local_video_url.split('/media/')
         path = '/media/' + path_list[1]
-        print('get_video_display_path : ', path)
         return path
 
     def get_absolute_url(self):
