@@ -96,9 +96,6 @@ def load_target_posters_cover(poster_list):
                 else:
                     cover_pic_list = Media.objects.filter(user_id_str=poster_id_str)
                     if len(cover_pic_list) > 0:
-                        media = cover_pic_list[0]
-                        path = media.get_media_display_path()
-                        print('******************** path : ', path)
                         poster_cover_dic['cover'] = cover_pic_list[0]
                         print('%s 为定义封面图片，取作品第一张' % poster.user_screen_name)
                     else:
