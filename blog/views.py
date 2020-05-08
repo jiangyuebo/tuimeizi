@@ -17,10 +17,12 @@ def index(request):
     # 根据poster查询他们的作品
     posters_covers_list_all = load_target_posters_cover(poster_list)
 
+    posters_covers_list = []
     # 分页
-    paginator = Paginator(posters_covers_list_all, 12)
-    page = request.GET.get('page')
-    posters_covers_list = paginator.get_page(page)
+    if len(posters_covers_list_all) > 0:
+        paginator = Paginator(posters_covers_list_all, 12)
+        page = request.GET.get('page')
+        posters_covers_list = paginator.get_page(page)
 
     # tweets_operator.setup_poster_and_fetch_tweets('zuxiashuishui', '0')
     return render(request, 'blog/index.html', context={
@@ -36,9 +38,12 @@ def detail(request, user_id_str):
     # 获取该poster所有作品
     media_list_all = Media.objects.filter(user_id_str=user_id_str)
     # 分页
-    paginator = Paginator(media_list_all, 12)
-    page = request.GET.get('page')
-    media_list = paginator.get_page(page)
+    media_list = []
+    if len(media_list_all) > 0:
+        paginator = Paginator(media_list_all, 12)
+        page = request.GET.get('page')
+        media_list = paginator.get_page(page)
+
     return render(request, 'blog/detail.html', context={'media_list': media_list})
 
 
