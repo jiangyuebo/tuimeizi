@@ -92,12 +92,10 @@ def load_target_posters_cover(poster_list):
                 cover_pic_list = Media.objects.filter(user_id_str=poster_id_str, is_cover=True)
                 if len(cover_pic_list) > 0:
                     poster_cover_dic['cover'] = cover_pic_list[0]
-                    print('获取 %s 封面图片成功' % poster.user_screen_name)
                 else:
                     cover_pic_list = Media.objects.filter(user_id_str=poster_id_str)
                     if len(cover_pic_list) > 0:
                         poster_cover_dic['cover'] = cover_pic_list[0]
-                        print('%s 为定义封面图片，取作品第一张' % poster.user_screen_name)
                     else:
                         print('无该poster作品 : ', poster.user_screen_name)
                         continue
