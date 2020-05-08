@@ -50,14 +50,12 @@ def detail(request, user_id_str):
 
 # 查看大图
 def enjoy(request, media_id_str):
-    print('here is the enjoy function******')
     media = Media.objects.get(media_id_str=media_id_str)
     return render(request, 'blog/enjoy.html', context={'media': media})
 
 
 # 归档列表
 def archive(request, year, month):
-    print('here is the archive function**********')
     post_list = Post.objects.filter(created_time__year=year,
                                     created_time__month=month
                                     ).order_by('-created_time')
@@ -92,20 +90,17 @@ def load_target_posters_cover(poster_list):
                 cover_pic_list = Media.objects.filter(user_id_str=poster_id_str, is_cover=True)
                 if len(cover_pic_list) > 0:
                     poster_cover_dic['cover'] = cover_pic_list[0]
-                    print('获取 %s 封面图片成功' % poster.user_screen_name)
                 else:
                     cover_pic_list = Media.objects.filter(user_id_str=poster_id_str)
                     if len(cover_pic_list) > 0:
                         poster_cover_dic['cover'] = cover_pic_list[0]
-                        print('%s 为定义封面图片，取作品第一张' % poster.user_screen_name)
+
                     else:
-                        print('无该poster作品 : ', poster.user_screen_name)
+
                         continue
             except Exception as e:
-                print('error :', e)
+                print(e)
 
             posters_covers_list.append(poster_cover_dic)
 
         return posters_covers_list
-    else:
-        print('poster_list is none or empty')
