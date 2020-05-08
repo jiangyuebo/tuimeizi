@@ -13,20 +13,20 @@
 </div>
 <div class="paginator">
     <span>
-        {% if media_list.has_previous %}
-            <a href="?page={{ media_list.previous_page_number }}">上一页</a>
+        {% if posters_covers_list.has_previous %}
+            <a href="?page={{ posters_covers_list.previous_page_number }}">上一页</a>
         {% endif %}
 
-        {% if media_list.count > 12 %}
+        {% if posters_covers_list.count > 12 %}
             <span class="current">
-            {{ media_list.number }} / {{ media_list.paginator.num_pages }}
+            {{ posters_covers_list.number }} / {{ posters_covers_list.paginator.num_pages }}
             </span>
         {% else %}
             1
         {% endif %}
 
-        {% if media_list.has_next %}
-            <a href="?page={{ media_list.next_page_number }}">下一页</a>
+        {% if posters_covers_list.has_next %}
+            <a href="?page={{ posters_covers_list.next_page_number }}">下一页</a>
         {% endif %}
     </span>
 </div>
