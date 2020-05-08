@@ -14,17 +14,18 @@ def index(request):
     # 读取poster数据
     poster_list = tweets_operator.load_target_posters()
 
-    # 根据poster查询他们的作品
-    posters_covers_list_all = load_target_posters_cover(poster_list)
+    posters_covers_list_all = []
+    if poster_list is not None and len(poster_list) > 0:
+        # 根据poster查询他们的作品
+        posters_covers_list_all = load_target_posters_cover(poster_list)
 
     posters_covers_list = []
     # 分页
-    if len(posters_covers_list_all) > 0:
+    if posters_covers_list_all is not None and len(posters_covers_list_all) > 0:
         paginator = Paginator(posters_covers_list_all, 12)
         page = request.GET.get('page')
         posters_covers_list = paginator.get_page(page)
 
-    # tweets_operator.setup_poster_and_fetch_tweets('zuxiashuishui', '0')
     return render(request, 'blog/index.html', context={
         'posters_covers_list': posters_covers_list,
     })
