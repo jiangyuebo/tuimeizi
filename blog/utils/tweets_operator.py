@@ -4,7 +4,6 @@ import time
 import random
 
 import os, urllib.request
-from django.utils import timezone
 
 from threading import Timer
 from blog.models import Poster, Media

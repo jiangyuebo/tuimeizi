@@ -1,6 +1,3 @@
-import os, urllib.request
-import traceback
-
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 
@@ -32,12 +29,14 @@ def index(request):
 
 
 # 详细
-def detail(request, user_id_str, user_name):
+def detail(request, user_id_str):
     # 将该poster浏览数+1
     poster = Poster.objects.get(user_id_str=user_id_str)
     poster.increase_views()
     # 获取该poster所有作品
     media_list_all = Media.objects.filter(user_id_str=user_id_str)
+    # 获取该poster显示名
+    poster_user_name = poster.user_name
     # 分页
     media_list = []
     if len(media_list_all) > 0:
@@ -47,7 +46,7 @@ def detail(request, user_id_str, user_name):
 
     return render(request, 'blog/detail.html', context={
         'media_list': media_list,
-        'user_name': user_name
+        'user_name': poster_user_name
     })
 
 

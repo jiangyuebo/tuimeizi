@@ -8,7 +8,7 @@ from blogproject import settings
 app_name = 'blog'
 urlpatterns = [
     path('', views.index, name='index'),
-    path('poster/<str:user_id_str>/<str:user_name>', views.detail, name='detail'),
+    path('poster/<str:user_id_str>', views.detail, name='detail'),
     path('enjoy/<str:media_id_str>', views.enjoy, name='enjoy'),
 ]
 
