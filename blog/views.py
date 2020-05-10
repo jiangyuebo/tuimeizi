@@ -95,7 +95,8 @@ def load_target_posters_cover(poster_list):
                 if len(cover_pic_list) > 0:
                     cover_media = cover_pic_list[0]
                     # 获取时间排序最新的media
-                    latest_media = Media.objects.first()
+                    poster_media_list = Media.objects.order_by('-created_at').filter(user_id_str=poster_id_str)
+                    latest_media = poster_media_list[0]
                     # 设置最新更新日期
                     cover_media.created_at = latest_media.created_at
                     # 设置封面图片
