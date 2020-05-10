@@ -932,6 +932,16 @@ img {
     padding-right: 10px;
 }
 
+.index-image-date-div {
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+    background-color: gray;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .index-image-block-container {
     position: relative;
 }

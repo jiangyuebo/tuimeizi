@@ -7,6 +7,7 @@
         <a href="{{ poster_cover_dic.poster.get_absolute_url }}">
             <img class="index-image" src={{ poster_cover_dic.cover.get_media_display_path }} alt="{{ poster_cover_dic.poster.user_screen_name }}">
             <div class="index-image-font-div">{{ poster_cover_dic.poster.user_name }}</div>
+            <div class="index-image-date-div">最新: {{ poster_cover_dic.cover.created_at }}</div>
         </a>
     </div>
 {% endfor %}

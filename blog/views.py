@@ -89,9 +89,17 @@ def load_target_posters_cover(poster_list):
             poster_cover_dic = {'poster': poster}
             # 获取poster作品封面，如果未定义封面责取第一张作品为封面
             try:
+                # 获取设定为封面的media
                 cover_pic_list = Media.objects.filter(user_id_str=poster_id_str, is_cover=True)
+
                 if len(cover_pic_list) > 0:
-                    poster_cover_dic['cover'] = cover_pic_list[0]
+                    cover_media = cover_pic_list[0]
+                    # 获取时间排序最新的media
+                    latest_media = Media.objects.first()
+                    # 设置最新更新日期
+                    cover_media.created_at = latest_media.created_at
+                    # 设置封面图片
+                    poster_cover_dic['cover'] = cover_media
                 else:
                     cover_pic_list = Media.objects.filter(user_id_str=poster_id_str)
                     if len(cover_pic_list) > 0:
