@@ -50,8 +50,9 @@ def detail(request, user_id_str):
 
 # 查看大图
 def enjoy(request, media_id_str):
+    print("media_id_str : ", media_id_str)
     media = Media.objects.get(media_id_str=media_id_str)
-    return render(request, 'blog/enjoy.html', context={'media': media})
+    return render(request, 'blog/enjoy.html', context={'enjoy_content': media})
 
 
 # 归档列表

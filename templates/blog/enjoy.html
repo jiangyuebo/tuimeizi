@@ -2,14 +2,14 @@
 
 {% block main %}
 <div class="enjoy-image-div">
-    {% if media.media_type == 'video' %}
+    {% if enjoy_content.media_type == 'video' %}
     <video controls>
-        <source src="{{ media.get_video_display_path }}">
+        <source src="{{ enjoy_content.get_video_display_path }}">
     </video>
-    <div style="color: white;">{{ media.post_text }}</div>
+    <div style="color: white;">{{ enjoy_content.post_text }}</div>
     {% else %}
-    <img src="{{media.get_media_display_path}}">
-    <div style="color: white;">{{ media.post_text }}</div>
+    <img src="{{enjoy_content.get_media_display_path}}">
+    <div style="color: white;">{{ enjoy_content.post_text }}</div>
     {% endif %}
 </div>
 {% endblock main %}
