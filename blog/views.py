@@ -32,7 +32,7 @@ def index(request):
 
 
 # 详细
-def detail(request, user_id_str):
+def detail(request, user_id_str, user_name):
     # 将该poster浏览数+1
     poster = Poster.objects.get(user_id_str=user_id_str)
     poster.increase_views()
@@ -45,7 +45,10 @@ def detail(request, user_id_str):
         page = request.GET.get('page')
         media_list = paginator.get_page(page)
 
-    return render(request, 'blog/detail.html', context={'media_list': media_list})
+    return render(request, 'blog/detail.html', context={
+        'media_list': media_list,
+        'user_name': user_name
+    })
 
 
 # 查看大图

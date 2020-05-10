@@ -936,6 +936,17 @@ img {
     position: relative;
 }
 
+.detail-name-tag {
+    text-align: center;
+    margin-left: 10%;
+    margin-top: -30px;
+    height: 30px;
+    line-height: 30px;
+    width: 150px;
+    background: black;
+    color: white;
+}
+
 .detail-movie-image-cover {
     width: 249px;
     height: 340px;

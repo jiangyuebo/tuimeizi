@@ -150,7 +150,10 @@ class Poster(models.Model):
 
     # 自定义 get_absolute_url 方法
     def get_absolute_url(self):
-        return reverse('blog:detail', kwargs={'user_id_str': self.user_id_str})
+        return reverse('blog:detail', kwargs={
+            'user_id_str': self.user_id_str,
+            'user_name': self.user_screen_name
+        })
 
     # 模型方法，阅读量 +1
     def increase_views(self):
