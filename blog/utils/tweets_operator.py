@@ -312,6 +312,16 @@ def download_file_from_url(store_dev, store_full_path, url):
         print('error :', e)
 
 
+# 删除本地文件
+def delete_local_file_by_path(file_local__path):
+    if os.path.exists(file_local__path):
+        # 文件存在
+        try:
+            os.remove(file_local__path)
+        except Exception as e:
+            print(e)
+
+
 # 读取media数据
 def load_media_data_from_database(media):
     if media is not None:
