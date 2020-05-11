@@ -33,7 +33,7 @@ class MediaAdmin(admin.ModelAdmin):
     # 修改的时候允许修改的字段
     fields = ['media_id_str', 'remote_url', 'is_cover']
     # 表格显示的字段
-    list_display = ('media_id_str', 'remote_url', 'local_url', 'is_cover')
+    list_display = ('media_id_str', 'preview', 'is_cover')
     # 添加搜索框
     search_fields = ['user_id_str', 'media_id_str']
     # 增加自定义按钮
@@ -48,7 +48,9 @@ class MediaAdmin(admin.ModelAdmin):
             # 删除本地文件
             tweets_operator.delete_local_file_by_path(local_path)
         self.message_user(request, '删除成功')
+
     delete_selected_media_data_and_file.short_description = '删除数据及本地文件'
+
 
 # Register your models here.
 admin.site.register(Post, PostAdmin)

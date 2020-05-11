@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
 
-
 # Create your models here.
 
 # 分类
+from django.utils.html import format_html
+
+
 class Category(models.Model):
     name = models.CharField(max_length=20)
 
@@ -85,6 +87,10 @@ class Media(models.Model):
     media_type = models.CharField('媒体类型', max_length=10)
     # remote url
     remote_url = models.CharField('远程地址', max_length=200)
+
+    def preview(self):
+        return format_html('<img src="{}" width="100px"/>', self.remote_url,)
+
     # local url
     local_url = models.CharField('本地路径', max_length=100)
     # local video url
