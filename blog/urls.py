@@ -10,6 +10,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('poster/<str:user_id_str>', views.detail, name='detail'),
     path('enjoy/<str:media_id_str>', views.enjoy, name='enjoy'),
+    path('search/', views.search, name='search'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

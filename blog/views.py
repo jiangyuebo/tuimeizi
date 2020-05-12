@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 from .models import Post, Category, Tag, Poster, Media
 from .utils import tweets_operator
@@ -76,6 +77,26 @@ def tag(request, pk):
     t = get_object_or_404(Tag, pk=pk)
     post_list = Post.objects.filter(tags=t).order_by('-created_time')
     return render(request, 'blog/index.html', context={'post_list': post_list})
+
+
+def search(request):
+    q = request.GET.get('q')
+    if not q:
+        error_msg = '请输入搜索关键字'
+        messages.add_message(request, messages.ERROR, error_msg, extra_tags='danger')
+        return redirect('blog:index')
+
+    # 读取poster数据
+    poster_list = tweets_operator.load_target_posters(q)
+
+    posters_covers_list_all = []
+    if poster_list is not None and len(poster_list) > 0:
+        # 根据poster查询他们的作品
+        posters_covers_list_all = load_target_posters_cover(poster_list)
+
+    return render(request, 'blog/index.html', context={
+        'posters_covers_list': posters_covers_list_all,
+    })
 
 
 # 获取目标用户封面

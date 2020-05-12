@@ -14,16 +14,18 @@
 </div>
 <div class="paginator">
     <span>
-        {% if posters_covers_list.has_previous %}
-            <a href="?page={{ posters_covers_list.previous_page_number }}">上一页</a>
-        {% endif %}
+        {% if posters_covers_list.paginator %}
+            {% if posters_covers_list.has_previous %}
+                <a href="?page={{ posters_covers_list.previous_page_number }}">上一页</a>
+            {% endif %}
 
-        <span class="current">
-            {{ posters_covers_list.number }} / {{ posters_covers_list.paginator.num_pages }}
-        </span>
+            <span class="current">
+                {{ posters_covers_list.number }} / {{ posters_covers_list.paginator.num_pages }}
+            </span>
 
-        {% if posters_covers_list.has_next %}
-            <a href="?page={{ posters_covers_list.next_page_number }}">下一页</a>
+            {% if posters_covers_list.has_next %}
+                <a href="?page={{ posters_covers_list.next_page_number }}">下一页</a>
+            {% endif %}
         {% endif %}
     </span>
 </div>

@@ -6,6 +6,9 @@ import random
 import os, urllib.request
 
 from threading import Timer
+
+from django.db.models import Q
+
 from blog.models import Poster, Media
 
 one_fetch_tweets_count = 200
@@ -64,10 +67,13 @@ def save_poster_data_into_database(poster):
             poster.save()
 
 
-# 获取目标用户组
-def load_target_posters():
+# 获取目标用户组 可选参数：poster中文名
+def load_target_posters(poster_user_name=''):
     try:
-        poster_list = Poster.objects.all()
+        if poster_user_name:
+            poster_list = Poster.objects.filter(Q(user_name__icontains=poster_user_name))
+        else:
+            poster_list = Poster.objects.all()
         return poster_list
     except Poster.DoesNotExist:
         print('无目标 poster 存在')
