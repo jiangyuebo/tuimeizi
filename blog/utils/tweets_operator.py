@@ -144,7 +144,7 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
                     flag = False
             except:
                 print('---> error poster:%s' % poster.user_screen_name)
-                is_finished = 0
+                is_finished = 1
                 pass
 
         # save
