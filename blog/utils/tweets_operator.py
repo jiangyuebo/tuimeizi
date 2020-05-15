@@ -142,10 +142,10 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
                     flag = True
                 else:
                     flag = False
-            except Exception as e:
-                print('error poster:%s and reason: %s' % poster.user_screen_name, e)
-                time.sleep(random.choice(range(300, 600)))
+            except:
+                print('---> error poster:%s' % poster.user_screen_name)
                 is_finished = 0
+                pass
 
         # save
         if new_tweets is not None and len(new_tweets) > 0:
