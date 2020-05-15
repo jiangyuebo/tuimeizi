@@ -133,6 +133,7 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
     flag = True
     while flag:
         is_finished = 0
+        new_tweets = []
         while is_finished == 0:
             try:
                 new_tweets = api.user_timeline(screen_name=poster.user_screen_name,
