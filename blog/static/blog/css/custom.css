@@ -467,6 +467,12 @@ img {
     color: #666;
 }
 
+.copyright_line2 {
+    text-align: center;
+    padding-top: 1em;
+    color: #666;
+}
+
 /**
  * 7.0 - Header Search Bar
  */

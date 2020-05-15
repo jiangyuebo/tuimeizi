@@ -21,6 +21,7 @@
     <script src="{% static 'blog/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'blog/js/pace.min.js' %}"></script>
     <script src="{% static 'blog/js/modernizr.custom.js' %}"></script>
+
 </head>
 <body>
 <div class="container">
@@ -28,7 +29,7 @@
         <div class="row">
             <div class="col-md-4 col-sm-5 col-xs-8">
                 <div class="logo">
-                    <h1><a href="{% url 'blog:index' %}"><b>推</b>妹子</a></h1>
+                    <h1><a href="{% url 'blog:index' %}"><b>推</b>妹子</a><sub><font size="2">你的女神在这里</font></sub></h1>
                 </div>
             </div><!-- col-md-4 -->
             <div class="col-md-8 col-sm-7 col-xs-4">
@@ -66,28 +67,13 @@
 <div>
     {% block main %}
     {% endblock main %}
-
-    <!--
-    <aside class="col-md-4">
-        {% block toc %}
-        {% endblock toc %}
-
-        {% show_recent_posts %}
-        {% show_archives %}
-        {% show_categories %}
-        {% show_tags %}
-
-        <div class="rss">
-            <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
-        </div>
-    </aside>
-    -->
 </div>
 <footer id="site-footer">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <p class="copyright">&copy 2020 - 推妹子 - 每日更新福利姬最新动态!</p>
+                <p class="copyright">推妹子 - 每日更新福利姬最新动态!</p>
+                <p style="text-align: center;color: #666;">免责申明: 本站内容均由程序自动抓取网络数据生成，如有侵权请联系删除</p>
             </div>
         </div>
     </div>

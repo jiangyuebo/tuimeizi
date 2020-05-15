@@ -143,7 +143,7 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
                 else:
                     flag = False
             except Exception as e:
-                print(e)
+                print('error poster:%s and reason: %s' % poster.user_screen_name, e)
                 time.sleep(random.choice(range(300, 600)))
                 is_finished = 0
 
