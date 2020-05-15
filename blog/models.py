@@ -32,7 +32,7 @@ class Tag(models.Model):
         return self.name
 
 
-# 文章
+# 文章 （用以记录每次需要删除的媒体文件，方便后续一键删除）
 class Post(models.Model):
     # 文章标题
     title = models.CharField('标题', max_length=70)
