@@ -130,8 +130,7 @@ def fetch_all_tweets_from_poster(poster):
                 is_finished = 1
             except Exception as e:
                 print(e)
-                time.sleep(random.choice(range(300, 600)))
-                is_finished = 0
+                is_finished = 1
         # save
         all_tweets.extend(new_tweets)
         oldest = get_the_oldest_tweet_id(all_tweets)
@@ -159,9 +158,11 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
                 else:
                     flag = False
             except Exception as e:
-                print('---> error poster:%s' % poster.user_screen_name)
-                print('e', e)
                 is_finished = 1
+                flag = False
+                print('---> error poster:%s' % poster.user_screen_name)
+                print(e)
+                break
 
         # save
         if new_tweets is not None and len(new_tweets) > 0:
