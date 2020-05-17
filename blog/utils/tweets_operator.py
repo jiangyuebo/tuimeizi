@@ -85,7 +85,22 @@ def fetch_tweets_data_from_target_posters():
     poster_list = load_target_posters()
 
     if api is not None and poster_list is not None and len(poster_list) > 0:
-        for poster in poster_list:
+        fetch_tweets_from_posters(api, poster_list)
+
+
+def fetch_tweets_data_from_target_posters_in_index(start_index, end_index):
+    api = init_my_tweepy()
+    poster_list = load_target_posters()
+    if api is not None and poster_list is not None and len(poster_list) > 0:
+        if (len(poster_list)-1) < end_index:
+            end_index = len(poster_list)-1
+        fetch_list = poster_list[start_index:end_index]
+        fetch_tweets_from_posters(api, fetch_list)
+
+
+def fetch_tweets_from_posters(api, fetch_posters_list):
+    if fetch_posters_list is not None and len(fetch_posters_list) > 0:
+        for poster in fetch_posters_list:
             # 判断当前poster是否已经获取过推文
             exsist_tweets = Media.objects.filter(user_id_str=poster.user_id_str)
             if len(exsist_tweets) > 0:
