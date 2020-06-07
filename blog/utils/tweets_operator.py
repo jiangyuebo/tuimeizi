@@ -150,7 +150,8 @@ def fetch_latest_tweets_from_poster(api, exsist_tweets, poster):
         new_tweets = []
         while is_finished == 0:
             try:
-                new_tweets = api.user_timeline(screen_name=poster.user_screen_name,
+                # 老poster使用ID获取数据，解决screen_name 频繁变更问题
+                new_tweets = api.user_timeline(id=poster.user_id_str,
                                                count=one_fetch_tweets_count, since_id=latest_post_id)
                 is_finished = 1
                 if len(new_tweets) > 0:
