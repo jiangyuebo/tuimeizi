@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'u=h7m^^ow&r@t_6r7uwh2=*p9cd$2$9ku04ih7gt8kq156^$yw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.viptuimeizi.com']
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'blog.apps.BlogConfig',
 ]
 
@@ -99,6 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CRONJOBS = [
+    ('* */2 * * *', 'blog.utils.tweets_operator.fetch_tweets_data_from_target_posters')
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
