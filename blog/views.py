@@ -133,4 +133,6 @@ def load_target_posters_cover(poster_list):
 
             posters_covers_list.append(poster_cover_dic)
 
+        # 根据更新时间进行排序
+        posters_covers_list.sort(key=lambda r: r['cover'].created_at, reverse=True)
         return posters_covers_list
