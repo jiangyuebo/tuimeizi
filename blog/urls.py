@@ -3,7 +3,7 @@ from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from . import views
-from blogproject import settings
+from blogproject.settings import common
 
 app_name = 'blog'
 urlpatterns = [
@@ -14,4 +14,4 @@ urlpatterns = [
 ]
 
 urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(common.MEDIA_URL, document_root=common.MEDIA_ROOT)
