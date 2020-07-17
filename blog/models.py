@@ -89,7 +89,7 @@ class Media(models.Model):
     remote_url = models.CharField('远程地址', max_length=200)
 
     def preview(self):
-        return format_html('<img src="{}" width="100px"/>', self.remote_url,)
+        return format_html('<img src="{}" width="200px"/>', self.remote_url,)
 
     # local url
     local_url = models.CharField('本地路径', max_length=100)
@@ -134,7 +134,7 @@ class Media(models.Model):
         return path
 
     def get_absolute_url(self):
-        return reverse('blog:enjoy', kwargs={'media_id_str': self.media_id_str})
+        return reverse('blog:enjoy', kwargs={'media_id_str': self.get_media_display_path()})
 
 
 class Poster(models.Model):
