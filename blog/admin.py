@@ -33,7 +33,7 @@ class MediaAdmin(admin.ModelAdmin):
     # 修改的时候允许修改的字段
     fields = ['media_id_str', 'remote_url', 'is_cover']
     # 表格显示的字段
-    list_display = ('media_id_str', 'preview', 'media_type', 'is_cover')
+    list_display = ('media_id_str', 'preview', 'is_cover')
     # 添加搜索框
     search_fields = ['user_id_str', 'media_id_str']
     # 增加自定义按钮

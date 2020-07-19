@@ -2,5 +2,7 @@
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+/blogproject/settings/local.py
+/blogproject/settings/production.py
 media/
 *.DS_Store
