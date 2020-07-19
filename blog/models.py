@@ -89,7 +89,7 @@ class Media(models.Model):
     remote_url = models.CharField('远程地址', max_length=200)
 
     def preview(self):
-        return format_html('<img src="{}" width="100px"/>', self.remote_url,)
+        return format_html('<img src="{}" width="400px"/>', self.get_media_display_path(),)
 
     # local url
     local_url = models.CharField('本地路径', max_length=100)
