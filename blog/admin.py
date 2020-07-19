@@ -38,6 +38,13 @@ class MediaAdmin(admin.ModelAdmin):
     search_fields = ['user_id_str', 'media_id_str']
     # 增加自定义按钮
     actions = ['delete_selected_media_data_and_file']
+    # 顶部和底部都显示操作栏
+    actions_on_top = True
+    actions_on_bottom = True
+    # 显示选中项数目
+    actions_selection_counter = True
+    # 每页记录限制
+    list_per_page = 50
 
     def delete_selected_media_data_and_file(self, request, queryset):
         for media in queryset:
