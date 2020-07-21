@@ -35,7 +35,9 @@ def detail(request, user_id_str):
     poster = Poster.objects.get(user_id_str=user_id_str)
     poster.increase_views()
     # 获取该poster所有作品
-    media_list_all = Media.objects.filter(user_id_str=user_id_str)
+    media_list_all = Media.objects.filter(user_id_str=user_id_str).order_by("-id")
+    for media in media_list_all:
+        print('meida id :', media.id)
     # 获取该poster显示名
     poster_user_name = poster.user_name
     # 分页

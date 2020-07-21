@@ -2,15 +2,20 @@
 
 {% block main %}
 <div class="enjoy-image-div">
-    {% if enjoy_content.media_type == 'video' %}
-    <video controls loop>
-        <source src="{{ enjoy_content.get_video_display_path }}">
-        您的浏览器不支持在线播放
-    </video>
-    <div style="color: white;">{{ enjoy_content.post_text }}</div>
-    {% else %}
-    <img src="{{enjoy_content.get_media_display_path}}">
-    <div style="color: white;">{{ enjoy_content.post_text }}</div>
-    {% endif %}
+    <div>
+        {% if enjoy_content.media_type == 'video' %}
+        <video controls loop>
+            <source src="{{ enjoy_content.get_video_display_path }}">
+            您的浏览器不支持在线播放
+        </video>
+        <button style='font-size: 32px;background-color: gray;border: none;padding:64px 32px;margin: 16px;'>></button>
+        <div style="color: white;">{{ enjoy_content.post_text }}</div>
+        {% else %}
+        <img src="{{enjoy_content.get_media_display_path}}">
+        <div style="color: white;">{{ enjoy_content.post_text }}</div>
+        {% endif %}
+        <a  href="{{ enjoy_content.get_pre_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'><</a>
+        <a href="{{ enjoy_content.get_next_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'>></a>
+    </div>
 </div>
 {% endblock main %}

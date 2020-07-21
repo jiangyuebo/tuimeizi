@@ -136,6 +136,28 @@ class Media(models.Model):
     def get_absolute_url(self):
         return reverse('blog:enjoy', kwargs={'media_id_str': self.media_id_str})
 
+    def get_pre_media_absolute_url(self):
+        # 获取所有此poster的media
+        poster_medias = Media.objects.filter(user_id_str=self.user_id_str).order_by("id")
+        # 获取上一个media的ID
+        pre_media = poster_medias.filter(id__gt=self.id).first()
+        if pre_media is not None:
+            final_media_id_str = pre_media.media_id_str
+        else:
+            final_media_id_str = self.media_id_str
+        return reverse('blog:enjoy', kwargs={'media_id_str': final_media_id_str})
+
+    def get_next_media_absolute_url(self):
+        # 获取所有此poster的media
+        poster_medias = Media.objects.filter(user_id_str=self.user_id_str).order_by("id")
+        # 获取下一个media的ID
+        next_media = poster_medias.filter(id__lt=self.id).all().order_by("-id").first()
+        if next_media is not None:
+            final_media_id_str = next_media.media_id_str
+        else:
+            final_media_id_str = self.media_id_str
+        return reverse('blog:enjoy', kwargs={'media_id_str': final_media_id_str})
+
 
 class Poster(models.Model):
     # user id
