@@ -55,8 +55,11 @@ def detail(request, user_id_str):
 
 # 查看大图
 def enjoy(request, media_id_str):
+    # 获取media数据
     media = Media.objects.get(media_id_str=media_id_str)
-    return render(request, 'blog/enjoy.html', context={'enjoy_content': media})
+    # 获取poster数据
+    poster = Poster.objects.get(user_id_str=media.user_id_str)
+    return render(request, 'blog/enjoy.html', context={'enjoy_content': media, 'poster': poster})
 
 
 # 归档列表

@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<div style="background: #52616a;" class="detail-name-tag">
+    <a style="color:white;" href="{{ poster.get_absolute_url }}">{{ poster.user_name }}</a>
+</div>
 <div class="enjoy-image-div">
     <div>
         {% if enjoy_content.media_type == 'video' %}
