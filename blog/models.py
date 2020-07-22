@@ -87,10 +87,6 @@ class Media(models.Model):
     media_type = models.CharField('媒体类型', max_length=10)
     # remote url
     remote_url = models.CharField('远程地址', max_length=200)
-
-    def preview(self):
-        return format_html('<img src="{}" width="400px"/>', self.get_media_display_path(),)
-
     # local url
     local_url = models.CharField('本地路径', max_length=100)
     # local video url
@@ -99,6 +95,14 @@ class Media(models.Model):
     created_at = models.DateField()
     # cover flag
     is_cover = models.BooleanField('是否封面', blank=True)
+
+    # 后台管理界面展示字段 - 图片预览
+    def preview(self):
+        return format_html('<img src="{}" width="400px"/>', self.get_media_display_path(),)
+
+    # 后台管理界面展示字段 - 查看链接
+    def enjoy_link(self):
+        return format_html('<a href="{}" >enjoy</a>', self.get_absolute_url(),)
 
     class Meta:
         verbose_name = '媒体'
