@@ -1,6 +1,28 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<script>
+$(function(){
+    var url = window.location.href;
+    var storage = window.sessionStorage;
+    storage['current_detail_url'] = url;
+
+    pushHistory();
+    window.addEventListener('popstate', function(e){
+        var storage = window.sessionStorage;
+        location.href=storage.current_index_url;
+    }, false);
+
+    function pushHistory(){
+        var url = "#";
+        var state = {
+            title: "title",
+            url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    }
+});
+</script>
 <div class="detail-name-tag">
     {{user_name}}
 </div>

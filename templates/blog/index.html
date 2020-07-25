@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<script>
+$(function(){
+    var url = window.location.href;
+    var storage = window.sessionStorage;
+    storage['current_index_url'] = url;
+});
+</script>
 <div class="flex-container">
 {% for poster_cover_dic in posters_covers_list %}
     <div class="index-image-block-container">
