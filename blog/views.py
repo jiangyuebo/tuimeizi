@@ -4,11 +4,14 @@ from django.contrib import messages
 
 from .models import Post, Category, Tag, Poster, Media
 from .utils import tweets_operator
+from analytics import models
 
 
 # Create your views here.
 # 首页列表
 def index(request):
+    models.count('', 'index', request)
+
     # 读取poster数据
     poster_list = tweets_operator.load_target_posters()
 
@@ -31,6 +34,7 @@ def index(request):
 
 # 详细
 def detail(request, user_id_str):
+    models.count('', 'detail', request)
     # 将该poster浏览数+1
     poster = Poster.objects.get(user_id_str=user_id_str)
     poster.increase_views()
@@ -53,6 +57,7 @@ def detail(request, user_id_str):
 
 # 查看大图
 def enjoy(request, media_id_str):
+    models.count('', 'enjoy', request)
     # 获取media数据
     media = Media.objects.get(media_id_str=media_id_str)
     # 获取poster数据
