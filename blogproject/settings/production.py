@@ -15,6 +15,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_crontab',
     'blog.apps.BlogConfig',
+
+    # our apps
+    'blog.apps.BlogConfig',
+    'analytics.apps.AnalyticsConfig',
 ]
 
 CRONJOBS = [
