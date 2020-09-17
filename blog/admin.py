@@ -33,13 +33,13 @@ class MediaAdmin(admin.ModelAdmin):
     # 修改的时候允许修改的字段
     fields = ['media_id_str', 'remote_url', 'is_cover']
     # 表格显示的字段
-    list_display = ('media_id_str', 'preview', 'media_type', 'created_at', 'enjoy_link', 'is_cover')
+    list_display = ('media_id_str', 'preview', 'media_type', 'created_at', 'enjoy_link', 'is_cover', 'insert_timestamp')
     # 添加搜索框
     search_fields = ['user_id_str', 'media_id_str']
     # 增加自定义按钮
     actions = ['delete_selected_media_data_and_file']
     # 根据创建时间排序
-    ordering = ('-created_at',)
+    ordering = ('-insert_timestamp',)
     # 顶部和底部都显示操作栏
     actions_on_top = True
     actions_on_bottom = True

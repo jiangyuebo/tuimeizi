@@ -95,6 +95,8 @@ class Media(models.Model):
     created_at = models.DateField()
     # cover flag
     is_cover = models.BooleanField('是否封面', blank=True)
+    # insert time stamp
+    insert_timestamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     # 后台管理界面展示字段 - 图片预览
     def preview(self):
@@ -107,7 +109,7 @@ class Media(models.Model):
     class Meta:
         verbose_name = '媒体'
         verbose_name_plural = verbose_name
-        ordering = ['-created_at']
+        ordering = ['-insert_timestamp']
 
     def __str__(self):
         media_data = 'user_id:' + self.user_id_str + \
