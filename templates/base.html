@@ -22,9 +22,29 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="{% static 'blog/js/pace.min.js' %}"></script>
     <script src="{% static 'blog/js/modernizr.custom.js' %}"></script>
+
+    <style>
+        .hello-msg {
+            font-size: 18px;
+            margin-right: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
+    <div class="text-right">
+        {% if user.is_authenticated %}
+        <h5>
+            <span class="hello-msg"><kbd>{{ request.user }}</kbd></span>
+            <span class="hello-msg"><a href="{% url 'accounts:logout' %}">退出</a></span>
+        </h5>
+        {% else %}
+        <h5>
+            <span class="hello-msg"><a href="{% url 'accounts:login' %}"><code>登录</code></a></span>
+            <span class="hello-msg"><a href="{% url 'accounts:register' %}"><code>注册</code></a></span>
+        </h5>
+        {% endif %}
+    </div>
     <header id="site-header">
         <div class="row">
             <div class="col-md-4 col-sm-5 col-xs-8">
