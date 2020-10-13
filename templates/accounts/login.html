@@ -1,76 +1,54 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:margin-top="http://www.w3.org/1999/xhtml">
-<head>
-    <title>登录</title>
+{% extends 'base.html' %}
 
-    <!-- meta -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content="福利姬,主播,萝莉,PR社,自拍" name="keywords">
+{% block main %}
+<script>
+    function validateForm(){
+        var email_value = document.forms["login"]["email"].value;
+        var password_value = document.forms["login"]["password"].value;
 
-    <!-- css -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script>
-        function validateForm(){
-            var email_value = document.forms["login"]["email"].value;
-            var password_value = document.forms["login"]["password"].value;
-
-            if(email_value == null || email_value == ""){
-                alert("Email can't be empty 邮箱必须填写");
-                return false;
-            }
-
-            if(password_value == null || password_value == ""){
-                alert("Password can't be empty 密码必须填写");
-                return false;
-            }
-
-            var at_pos = email_value.indexOf("@");
-            var dot_pos = email_value.lastIndexOf(".");
-            if(at_pos < 1 || dot_pos < at_pos + 2 || dot_pos + 2 >= email_value.length){
-                alert("Email not valid  邮箱格式不正确");
-                return false;
-            }
+        if(email_value == null || email_value == ""){
+            alert("Email can't be empty 邮箱必须填写");
+            return false;
         }
-    </script>
 
-</head>
-<body>
-    <div class="container">
-        <div style="margin-top:5%;" class="panel panel-primary">
-            <div class="panel-heading"><H4>LOGIN 登录</H4></div>
-            <div class="panel-body">
-                <form name="login" method="POST" onsubmit="return validateForm()" action="{% url 'accounts:login' %}">
-                    {% csrf_token %}
-                    <div style="margin-top:20px;" class='input-group'>
-                        <span class='input-group-addon'><i class='glyphicon glyphicon-envelope'></i></span>
-                        <input id="id_email" type="text" class="form-control" name="email" placeholder="Email 邮箱">
-                    </div>
-                    <div style="margin-top:20px;" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="id_password" type="password" class="form-control" name="password" placeholder="Password 密码">
-                    </div>
-                    <button style="margin-top:40px;" type="submit" class="btn btn-primary"><h4>Login 登录</h4></button>
-                </form>
-            </div>
-            {% if error %}
-            <div style="margin:20px;" class="alert alert-danger">
-                {{error}}
-            </div>
-            {% endif %}
-            <div class="text-center">
-                <p><h4 class="text-primary">Don't have an account? 还没有账号？<a href="{% url 'accounts:register' %}" class="ml-2">Sign Up 注册</a></h4></p>
-            </div>
+        if(password_value == null || password_value == ""){
+            alert("Password can't be empty 密码必须填写");
+            return false;
+        }
+
+        var at_pos = email_value.indexOf("@");
+        var dot_pos = email_value.lastIndexOf(".");
+        if(at_pos < 1 || dot_pos < at_pos + 2 || dot_pos + 2 >= email_value.length){
+            alert("Email not valid  邮箱格式不正确");
+            return false;
+        }
+    }
+</script>
+<div class="container">
+    <div style="margin-top:5%;" class="panel panel-primary">
+        <div class="panel-heading"><H4>LOGIN 登录</H4></div>
+        <div class="panel-body">
+            <form name="login" method="POST" onsubmit="return validateForm()" action="{% url 'accounts:login' %}" autocomplete="off">
+                {% csrf_token %}
+                <div style="margin-top:20px;" class='input-group'>
+                    <span class='input-group-addon'><i class='glyphicon glyphicon-envelope'></i></span>
+                    <input id="id_email" type="text" class="form-control" name="email" placeholder="Email 邮箱">
+                </div>
+                <div style="margin-top:20px;" class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="id_password" type="password" class="form-control" name="password" placeholder="Password 密码">
+                </div>
+                <button style="margin-top:40px;" type="submit" class="btn btn-primary"><h4>Login 登录</h4></button>
+            </form>
+        </div>
+        {% if error %}
+        <div style="margin:20px;" class="alert alert-danger">
+            {{error}}
+        </div>
+        {% endif %}
+        <div class="text-center">
+            <p><h4 class="text-primary">Don't have an account? 还没有账号？<a href="{% url 'accounts:register' %}" class="ml-2">Sign Up 注册</a></h4></p>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock main %}

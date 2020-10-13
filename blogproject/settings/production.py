@@ -17,7 +17,9 @@ INSTALLED_APPS = [
 
     # our apps
     'blog.apps.BlogConfig',
+    'accounts.apps.AccountsConfig',
     'analytics.apps.AnalyticsConfig',
+    'captcha',
 ]
 
 CRONJOBS = [

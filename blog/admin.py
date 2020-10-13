@@ -6,7 +6,7 @@ from .utils import tweets_operator
 
 class PostAdmin(admin.ModelAdmin):
     # 控制post列表展示字段
-    list_display = ['title', 'created_time', 'modified_time', 'category', 'author']
+    list_display = ['title', 'created_time', 'modified_time', 'category']
     # 控制表单展示字段
     fields = ['title', 'body', 'excerpt', 'category', 'tags']
 

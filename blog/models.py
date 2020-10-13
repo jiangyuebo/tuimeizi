@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+
+from blogproject.settings import common
 
 # Create your models here.
 
@@ -52,8 +53,6 @@ class Post(models.Model):
     category = models.ForeignKey(Category, verbose_name='分类', on_delete=models.CASCADE)
     # 标签，多对多（一篇文章可有多个标签，一个标签可有多篇文章）
     tags = models.ManyToManyField(Tag, verbose_name='标签', blank=True)
-    # 作者
-    author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
 
     # 汉化
     class Meta:

@@ -1,7 +1,7 @@
 from .common import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = []
+SECRET_KEY = 'mh97fl=2_!6n(e7)obj%ix5n%_95d+%-xxamdi$slwvpd$uule'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
@@ -13,5 +13,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # our apps
     'blog.apps.BlogConfig',
+    'accounts.apps.AccountsConfig',
+    'analytics.apps.AnalyticsConfig',
+    'captcha'
 ]
