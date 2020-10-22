@@ -11,6 +11,8 @@ class UserInformation(models.Model):
     birthday = models.DateTimeField(verbose_name="生日", null=True, blank=True)
     gender = models.CharField(choices=(('girl', '女'), ('boy', '男')), max_length=10, verbose_name="性别")
     information_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    score = models.IntegerField(verbose_name="积分", default=0)
+    level_score = models.IntegerField(verbose_name="等级分", default=0)
 
     class Meta:
         verbose_name = "用户额外信息"
@@ -29,3 +31,9 @@ class EmailVerifyCode(models.Model):
     class Meta:
         verbose_name = "邮箱验证码"
         verbose_name_plural = verbose_name
+
+
+class Favorite(models.Model):
+    favorite_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="收藏用户")
+    favorite_media_id = models.CharField(max_length=50, verbose_name="收藏媒体ID", null=True, blank=True)
+    create_date = models.DateTimeField(default=timezone.now, verbose_name="收藏时间")

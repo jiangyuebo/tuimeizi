@@ -6,6 +6,8 @@ from .models import Post, Category, Tag, Poster, Media
 from .utils import tweets_operator
 from analytics import models
 
+from accounts.models import Favorite
+
 
 # Create your views here.
 # 首页列表
@@ -62,7 +64,17 @@ def enjoy(request, media_id_str):
     media = Media.objects.get(media_id_str=media_id_str)
     # 获取poster数据
     poster = Poster.objects.get(user_id_str=media.user_id_str)
-    return render(request, 'blog/enjoy.html', context={'enjoy_content': media, 'poster': poster})
+    # get favorite data
+    try:
+        Favorite.objects.get(favorite_media_id=media_id_str, favorite_user=request.user)
+        favorite_class = 'btn-success'
+        favorite_text = '已收藏'
+    except Exception as e:
+        favorite_class = 'btn-danger'
+        favorite_text = '收藏'
+    return render(request, 'blog/enjoy.html', context={
+        'enjoy_content': media, 'poster': poster, 'favorite_class': favorite_class, 'favorite_text': favorite_text
+    })
 
 
 # 归档列表
@@ -137,10 +149,35 @@ def load_target_posters_cover(poster_list):
                     else:
                         continue
             except Exception as e:
-                print(e)
+                pass
 
             posters_covers_list.append(poster_cover_dic)
 
         # 根据更新时间进行排序
         posters_covers_list.sort(key=lambda r: r['cover'].created_at, reverse=True)
         return posters_covers_list
+
+
+def favorite(request):
+    if request.user.is_authenticated:
+        # 获取该用户收藏媒体对象
+        favorite_list_all = Favorite.objects.filter(favorite_user=request.user).order_by("-create_date")
+        # 获取收藏媒体
+        favorite_media_list = []
+        for favorite_item in favorite_list_all:
+            media_id_str = favorite_item.favorite_media_id
+            media = Media.objects.filter(media_id_str=media_id_str)[0]
+            favorite_media_list.append(media)
+
+        # 分页
+        media_list = []
+        if len(favorite_media_list) > 0:
+            paginator = Paginator(favorite_media_list, 10)
+            page = request.GET.get('page')
+            media_list = paginator.get_page(page)
+
+        return render(request, 'blog/favorite.html', context={
+            'media_list': media_list
+        })
+    else:
+        return render(request, 'accounts/login.html')

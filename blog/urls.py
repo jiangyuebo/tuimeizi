@@ -11,6 +11,7 @@ urlpatterns = [
     path('poster/<str:user_id_str>', views.detail, name='detail'),
     path('enjoy/<str:media_id_str>', views.enjoy, name='enjoy'),
     path('search/', views.search, name='search'),
+    path('favorite/', views.favorite, name='favorite'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -2,16 +2,13 @@ from django.shortcuts import render, redirect, reverse
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
 from django.db.models import Q
+from django.db.models.aggregates import Count
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import UserRegisterForm, UserLoginForm
-from .models import UserInformation
-
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
-
-import json
+from .models import UserInformation, Favorite
 
 
 def register(request):
@@ -48,12 +45,11 @@ def register(request):
                     })
         else:
             return render(request, 'accounts/register.html', {
-                    'form': user_register_form
-                })
+                'form': user_register_form
+            })
 
 
 def login_page(request):
-
     if request.method == 'GET':
         return render(request, 'accounts/login.html')
     else:
@@ -81,26 +77,57 @@ def logout_page(request):
     return redirect('accounts:login')
 
 
-# generate the captcha
-def captcha():
-    hash_key = CaptchaStore.generate_key()
-    image_url = captcha_image_url(hash_key)
-    captcha = {'hash_key': hash_key, 'image_url': image_url}
-    return captcha
-
-
-# refresh the captcha
-def refresh_captcha(request):
-    return HttpResponse(json.dumps(captcha()), content_type='application/json')
-
-
-def verify_captcha(captcha_str, captcha_hash_key):
-    if captcha_str and captcha_hash_key:
-        try:
-            get_captcha = CaptchaStore.objects.get(hashkey=captcha_hash_key)
-            if get_captcha.response == captcha_str.lower():
-                return True
-        except:
-            return False
+@csrf_exempt
+def add_favorite(request):
+    # determine whether user is logged or not
+    if request.user.is_authenticated:
+        # login
+        # check the favorite count
+        favorite_count = Favorite.objects.filter(favorite_user=request.user).count()
+        if favorite_count < 10:
+            # favorite less than 10
+            media_id_str = request.POST["media_id_str"]
+            operation = save_favorite_media(request.user, media_id_str)
+            return JsonResponse({'result': operation}, status=200)
+        else:
+            # favorite more than 10, check user active status
+            user_information = UserInformation.objects.filter(information_user=request.user)[0]
+            print("user_information.is_active: ", user_information.is_active)
+            if user_information.is_active:
+                # user is active, save the pic
+                media_id_str = request.POST["media_id_str"]
+                operation = save_favorite_media(request.user, media_id_str)
+                return JsonResponse({'result': operation}, status=200)
+            else:
+                # user is not active, can't save the pic
+                return JsonResponse({'result': 'refuse', 'message': '因服务器空间原因，只能收藏10个'}, status=200)
     else:
-        return False
+        # not logged in, redirect to login page
+        return JsonResponse({'result': 'needLogin'}, status=200)
+
+
+def save_favorite_media(user, media_id_str):
+    try:
+        favorite = Favorite.objects.get(favorite_user=user, favorite_media_id=media_id_str)
+        # favorite exist, it's delete operation
+        favorite.delete()
+        return 'delete'
+    except Exception as e:
+        # favorite not exist, create it
+        print('favorite not exist ...')
+        new_favorite = Favorite(favorite_user=user, favorite_media_id=media_id_str)
+        new_favorite.save()
+        return 'add'
+
+
+def delete_favorite(request, media_id_str):
+    if request.user.is_authenticated:
+        favorite_media = Favorite.objects.filter(favorite_user=request.user, favorite_media_id=media_id_str)
+        if favorite_media:
+            # exist, delete it
+            favorite_media.delete()
+        else:
+            pass
+        return JsonResponse({'result': 'success'}, status=200)
+    else:
+        pass
