@@ -92,7 +92,6 @@ def add_favorite(request):
         else:
             # favorite more than 10, check user active status
             user_information = UserInformation.objects.filter(information_user=request.user)[0]
-            print("user_information.is_active: ", user_information.is_active)
             if user_information.is_active:
                 # user is active, save the pic
                 media_id_str = request.POST["media_id_str"]
@@ -114,7 +113,6 @@ def save_favorite_media(user, media_id_str):
         return 'delete'
     except Exception as e:
         # favorite not exist, create it
-        print('favorite not exist ...')
         new_favorite = Favorite(favorite_user=user, favorite_media_id=media_id_str)
         new_favorite.save()
         return 'add'
