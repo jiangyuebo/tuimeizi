@@ -18,5 +18,6 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
     'analytics.apps.AnalyticsConfig',
+    'mypayment.apps.MypaymentConfig',
     'captcha'
 ]

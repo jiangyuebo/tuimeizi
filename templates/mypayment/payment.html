@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<script src="https://www.paypal.com/sdk/js?client-id=AVvhWtumzxkqzMJl6oZ6MwyI7BfiIYHZ_8BrUkXHVMtB-TqwtKlvRlhuImgNRNr1q7Vxd15xNNujPgMD"></script>
+<div class="container">
+    <div class="panel panel-success">
+        <div class="panel-heading">成为会员</div>
+        <div class="panel-body">
+            您将得到无限制的收藏能力
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '5.00'
+          }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert('Transaction completed by ' + details.payer.name.given_name);
+      });
+    }
+  }).render('#paypal-button-container'); // Display payment options on your web page
+</script>
+{% endblock main %}
