@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<script>
+$(function(){
+    var url = window.location.href;
+    var storage = window.sessionStorage;
+    storage['current_index_url'] = url;
+});
+</script>
+<div class="flex-container">
+{% for album_cover_dic in album_list %}
+    <div class="index-image-block-container">
+        <a href="{% url 'album:album_detail' album_cover_dic.album_id %}">
+            <img class="index-image" src={{ album_cover_dic.cover.pic.url }}>
+            <div class="index-image-font-div">{{ album_cover_dic.title }}</div>
+        </a>
+    </div>
+{% endfor %}
+</div>
+<div class="paginator">
+    <span>
+        {% if posters_covers_list.paginator %}
+            {% if posters_covers_list.has_previous %}
+                <a href="?page={{ posters_covers_list.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+                {{ posters_covers_list.number }} / {{ posters_covers_list.paginator.num_pages }}
+            </span>
+
+            {% if posters_covers_list.has_next %}
+                <a href="?page={{ posters_covers_list.next_page_number }}">下一页</a>
+            {% endif %}
+        {% endif %}
+    </span>
+</div>
+{% endblock main %}

@@ -26,7 +26,7 @@
 </script>
 <div class="container">
     <div style="margin-top:5%;" class="panel panel-primary">
-        <div class="panel-heading"><H4>SIGN UP 注册</H4></div>
+        <div class="panel-heading">SIGN UP 注册</div>
         <div class="panel-body">
             <form name="register" onsubmit="return validateForm()" method="POST" action="{% url 'accounts:register' %}" autocomplete="off">
                 {% csrf_token %}
@@ -41,7 +41,7 @@
                 <div style="margin-top:20px;" class="input-group">
                     <a>{{ form.captcha }}</a>
                 </div>
-                <button style="margin-top:40px;" type="submit" class="btn btn-primary"><h4>Register Account 注册</h4></button>
+                <button style="margin-top:40px;" type="submit" class="btn btn-primary">Register Account 注册</button>
             </form>
         </div>
 

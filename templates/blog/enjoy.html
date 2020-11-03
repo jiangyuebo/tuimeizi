@@ -75,7 +75,6 @@ $(document).ready(function(){
         <a href="{{ enjoy_content.get_pre_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'><</a>
         <button type="button" id="favorite_button" class="btn {{ favorite_class }}" style="margin: 16px;" data-url_root="{% url 'accounts:add_favorite' %}">{{ favorite_text }}</button>
         <a href="{{ enjoy_content.get_next_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'>></a>
-        <div id="media_id_str">{{ enjoy_content.media_id_str }}</div>
     </div>
 </div>
 {% endblock main %}

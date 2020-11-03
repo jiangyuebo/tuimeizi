@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'analytics.apps.AnalyticsConfig',
     'mypayment.apps.MypaymentConfig',
+    'albumdownload.apps.AlbumdownloadConfig',
     'captcha',
 ]
 

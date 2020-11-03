@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<script>
+$(function(){
+    var url = window.location.href;
+    var storage = window.sessionStorage;
+    storage['current_index_url'] = url;
+});
+</script>
+<div class="container text-center">
+    <h2 style="margin-top: 20px;">{{ album.title }}</h2>
+    <div style="margin-top: 20px;" class="flex-container">
+        {% for album_pic in album_pics %}
+        <img style="margin-top: 50px;"  src={{ album_pic.pic.url }}>
+        {% endfor %}
+    </div>
+    <div style="margin-top: 20px;" class="container">
+        {% if user.is_authenticated %}
+        {% for album_download_path in album_download_paths %}
+        <div class="text-left">
+            <h3><span class="label label-primary">下载地址</span><font style="margin-left: 20px;"><a href="{{ album_download_path.download_path }}" target="_blank" >{{ album_download_path.download_path }}</a></font></h3>
+        </div>
+        <div class="text-left">
+            <h3><span class="label label-success">密码</span><font style="margin-left: 20px;">{{ album_download_path.password }}</font></h3>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-info">请<a href="{% url 'accounts:login' %}"><font color="red">登录</font></a>后查看下载链接</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock main %}

@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('', include('accounts.urls')),
     path('', include('mypayment.urls')),
+    path('', include('albumdownload.urls')),
     path('captcha/', include('captcha.urls')),
 ]
