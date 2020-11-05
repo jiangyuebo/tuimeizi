@@ -44,6 +44,7 @@ class AlbumPic(models.Model):
 class AlbumDownloadPath(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     download_path = models.CharField('下载地址', max_length=200, null=True, blank=True)
+    code = models.CharField('提取码', max_length=20, null=True, blank=True)
     password = models.CharField('解压密码', max_length=20, null=True, blank=True)
     create_date = models.DateTimeField('创建时间', default=timezone.now)
 
