@@ -29,8 +29,73 @@
             margin-right: 20px;
         }
     </style>
+    <script>
+        $(document).ready(function(){
+            if(isMobile()){
+                // mobile
+                ad_content = "<iframe src='//a.realsrv.com/iframe.php?idzone=4054076&size=300x100' width='300' height='100' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";
+                $("#ad_banner").html(ad_content);
+            }else{
+                // not mobile
+                ad_content = "<iframe src='//a.realsrv.com/iframe.php?idzone=3920750&size=900x250' width='900' height='250' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";
+                $("#ad_banner").html(ad_content);
+            }
+        });
+
+        function isMobile(){
+            var userAgentInfo = navigator.userAgent;
+            var mobileAgents = [ "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad","iPod"];
+            var mobile_flag = false;
+
+            for (var v = 0; v < mobileAgents.length; v++) {
+                if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
+                    mobile_flag = true;
+                    break;
+                }
+            }
+            // judge by screen size
+            var screen_width = window.screen.width;
+            var screen_height = window.screen.height;
+            if(screen_width < 500 && screen_height < 800){
+                mobile_flag = true;
+            }
+
+            return mobile_flag;
+        }
+    </script>
 </head>
 <body>
+<div id="ad_banner" class="container text-center"></div>
+<script type="application/javascript" data-idzone="4054016" data-ad_first_trigger_clicks="3" data-ad_next_trigger_clicks="15" data-browser_settings="1" data-ad_trigger_method="3" src="https://a.realsrv.com/fp-interstitial.js"></script>
+<script type="application/javascript" data-idzone="4054080" data-ad_first_trigger_clicks="3" data-ad_next_trigger_clicks="20" data-browser_settings="1" data-ad_trigger_method="3" src="https://a.realsrv.com/fp-interstitial.js"></script>
+<script type="application/javascript">
+    pn_idzone = 4054354;
+    pn_sleep_seconds = 0;
+    pn_is_self_hosted = 0;
+    pn_soft_ask = 1;
+    pn_filename = "{% static 'blog/js/worker.js' %}";
+    pn_soft_ask_horizontal_position = "left";
+    pn_soft_ask_vertical_position = "top";
+    pn_soft_ask_title_enabled = 1;
+    pn_soft_ask_title = "Click ALLOW to continue";
+    pn_soft_ask_description = "Would you like to receive great special offers &amp; promotions?";
+    pn_soft_ask_yes = "ALLOW";
+    pn_soft_ask_no = "NO, THANKS";
+</script>
+<script type="application/javascript" src="https://js.wpnsrv.com/pn.php"></script>
+<script type="application/javascript" src="https://a.realsrv.com/video-slider.js"></script>
+<script type="application/javascript">
+var adConfig = {
+    "idzone": 4054492,
+    "frequency_period": 1440,
+    "close_after": 0,
+    "sound_enabled": 0,
+    "on_complete": "repeat",
+    "branding_enabled": 1,
+    "screen_density": 25
+};
+ExoVideoSlider.init(adConfig);
+</script>
 <div class="container">
     <div class="text-right">
         {% if user.is_authenticated %}
@@ -85,6 +150,9 @@
     {% block main %}
     {% endblock main %}
 </div>
+<div class="container text-center">
+    <script type="application/javascript" data-idzone="4054084" src="https://a.realsrv.com/nativeads-v2.js" ></script>
+</div>
 <footer id="site-footer">
     <div class="container">
         <div class="row">
@@ -102,7 +170,9 @@
     <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
     <nav>
         <ul>
-            <li><a href="{% url 'blog:index' %}">首页</a></li>
+            <li><a href="{% url 'blog:index' %}">福利姬</a></li>
+            <li><a href="{% url 'album:album' %}">套图</a></li>
+            <li><a href="{% url 'blog:favorite' %}">收藏</a></li>
         </ul>
     </nav>
 </div>

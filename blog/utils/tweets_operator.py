@@ -1,15 +1,13 @@
 import datetime
-import tweepy
+import os
 import time
-import random
-
-import os, urllib.request
-
+import urllib.request
 from threading import Timer
 
+import tweepy
 from django.db.models import Q
 
-from blog.models import Poster, Media
+from blog.models import Poster, Media, DeletedMedia
 
 one_fetch_tweets_count = 200
 
@@ -220,6 +218,12 @@ def tweetsOperator(statusDatas):
                         media_id_str = media['id_str']
                         media_type = media['type']
                         media_url = media['media_url']
+
+                        # 如果媒体已在删除列表中记录，跳过不进行下载
+                        deleted_media_record = DeletedMedia.objects.filter(post_id_str=post_id_str, media_id_str=media_id_str)
+                        if deleted_media_record:
+                            # 如果有记录，此媒体不进行保存，跳到下一个
+                            continue
 
                         # 图片名称
                         photo_file_name = os.path.basename(media_url)

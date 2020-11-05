@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category, Tag, Media, Poster
+from .models import Post, Category, Tag, Media, Poster, DeletedMedia
 
 from .utils import tweets_operator
 
@@ -50,6 +50,9 @@ class MediaAdmin(admin.ModelAdmin):
 
     def delete_selected_media_data_and_file(self, request, queryset):
         for media in queryset:
+            # 记录删除媒体
+            deleted_media_record = DeletedMedia(post_id_str=media.post_id_str, media_id_str=media.media_id_str)
+            deleted_media_record.save()
             # 先删除数据库相关数据
             media.delete()
             # 获取文件本地存储路径
@@ -59,6 +62,14 @@ class MediaAdmin(admin.ModelAdmin):
         self.message_user(request, '删除成功')
 
     delete_selected_media_data_and_file.short_description = '删除数据及本地文件'
+
+
+@admin.register(DeletedMedia)
+class DeletedMediaAdmin(admin.ModelAdmin):
+    # 修改的时候允许修改的字段
+    fields = ['post_id_str', 'media_id_str']
+    # 表格显示的字段
+    list_display = ('post_id_str', 'media_id_str')
 
 
 # Register your models here.

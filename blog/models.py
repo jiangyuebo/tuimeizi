@@ -99,11 +99,11 @@ class Media(models.Model):
 
     # 后台管理界面展示字段 - 图片预览
     def preview(self):
-        return format_html('<img src="{}" width="400px"/>', self.get_media_display_path(),)
+        return format_html('<img src="{}" width="400px"/>', self.get_media_display_path(), )
 
     # 后台管理界面展示字段 - 查看链接
     def enjoy_link(self):
-        return format_html('<a href="{}" >enjoy</a>', self.get_absolute_url(),)
+        return format_html('<a href="{}" >enjoy</a>', self.get_absolute_url(), )
 
     class Meta:
         verbose_name = '媒体'
@@ -191,3 +191,8 @@ class Poster(models.Model):
     def increase_views(self):
         self.poster_views += 1
         self.save(update_fields=['poster_views'])
+
+
+class DeletedMedia(models.Model):
+    post_id_str = models.CharField('推文id', max_length=36)
+    media_id_str = models.CharField('媒体资源ID', max_length=36)
