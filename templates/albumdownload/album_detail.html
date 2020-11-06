@@ -12,7 +12,7 @@ $(function(){
     <h2 style="margin-top: 20px;">{{ album.title }}</h2>
     <div style="margin-top: 20px;" class="flex-container">
         {% for album_pic in album_pics %}
-        <img style="margin-top: 50px;"  src={{ album_pic.pic.url }}>
+        <img style="margin-top: 50px;"  src={{ album_pic.remote_url }}>
         {% endfor %}
     </div>
     <div style="margin-top: 20px;" class="container">

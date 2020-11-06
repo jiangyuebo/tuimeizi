@@ -13,9 +13,9 @@ def album_index(request):
     for album in album_list:
         title_cover_dic = {'album_id': str(album.id), 'title': album.title}
         # 查询封面图片
-        album_cover = AlbumPic.objects.filter(album=album, is_cover=True)[0]
+        album_cover = AlbumPic.objects.filter(album=album, is_cover=True)
         if album_cover:
-            title_cover_dic['cover'] = album_cover
+            title_cover_dic['cover'] = album_cover[0]
         else:
             album_cover = AlbumPic.objects.filter(album=album)[0]
             title_cover_dic['cover'] = album_cover

@@ -12,7 +12,7 @@ $(function(){
 {% for album_cover_dic in album_list %}
     <div class="index-image-block-container">
         <a href="{% url 'album:album_detail' album_cover_dic.album_id %}">
-            <img class="index-image" src={{ album_cover_dic.cover.pic.url }}>
+            <img class="index-image" src={{ album_cover_dic.cover.remote_url }}>
             <div class="index-image-font-div">{{ album_cover_dic.title }}</div>
         </a>
     </div>
