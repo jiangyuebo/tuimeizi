@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<link rel="stylesheet" href="https://cdn.fluidplayer.com/v2/current/fluidplayer.min.css" type="text/css">
+<script src="https://cdn.fluidplayer.com/v2/current/fluidplayer.min.js"></script>
 <script>
 $(function(){
     pushHistory();
@@ -57,13 +59,27 @@ $(document).ready(function(){
     });
 });
 </script>
+<script type="application/javascript">
+var testVideo = fluidPlayer(
+    "my-video",
+    {
+        vastOptions : {
+            "adList" : [{
+                "vAlign" : "middle",
+                "roll" : "preRoll",
+                "vastTag" : "https://syndication.realsrv.com/splash.php?idzone=4054500"
+            }]
+        }
+    }
+);
+</script>
 <div style="background: #52616a;" class="detail-name-tag">
     <a style="color:white;" href="{{ poster.get_absolute_url }}">{{ poster.user_name }}</a>
 </div>
 <div class="enjoy-image-div">
     <div>
         {% if enjoy_content.media_type == 'video' %}
-        <video controls loop>
+        <video id="my-video" controls loop>
             <source src="{{ enjoy_content.get_video_display_path }}">
             您的浏览器不支持在线播放
         </video>
