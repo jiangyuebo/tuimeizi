@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<link rel="stylesheet" href="https://cdn.fluidplayer.com/v2/current/fluidplayer.min.css" type="text/css">
-<script src="https://cdn.fluidplayer.com/v2/current/fluidplayer.min.js"></script>
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 <script>
 $(function(){
     pushHistory();
@@ -59,38 +58,45 @@ $(document).ready(function(){
     });
 });
 </script>
-<script type="application/javascript">
-var testVideo = fluidPlayer(
-    "my-video",
-    {
-        vastOptions : {
-            "adList" : [{
-                "vAlign" : "middle",
-                "roll" : "preRoll",
-                "vastTag" : "https://syndication.realsrv.com/splash.php?idzone=4054500"
-            }]
-        }
-    }
-);
-</script>
 <div style="background: #52616a;" class="detail-name-tag">
     <a style="color:white;" href="{{ poster.get_absolute_url }}">{{ poster.user_name }}</a>
 </div>
 <div class="enjoy-image-div">
-    <div>
-        {% if enjoy_content.media_type == 'video' %}
-        <video id="my-video" controls loop>
-            <source src="{{ enjoy_content.get_video_display_path }}">
-            您的浏览器不支持在线播放
-        </video>
-        <div style="color: white;"></div>
-        {% else %}
-        <img src="{{enjoy_content.get_media_display_path}}">
-        <div  style="color: white;"></div>
-        {% endif %}
-        <a href="{{ enjoy_content.get_pre_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'><</a>
-        <button type="button" id="favorite_button" class="btn {{ favorite_class }}" style="margin: 16px;" data-url_root="{% url 'accounts:add_favorite' %}">{{ favorite_text }}</button>
-        <a href="{{ enjoy_content.get_next_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'>></a>
+    <div class="row">
+        <div id="side_ad_left" class="col-xs-2"></div>
+        <div class="col-xs-8">
+            {% if enjoy_content.media_type == 'video' %}
+            <video id="my-video" controls loop>
+                <source src="{{ enjoy_content.get_video_display_path }}" type="video/mp4">
+                您的浏览器不支持在线播放
+            </video>
+            <div style="color: white;"></div>
+            {% else %}
+            <img src="{{enjoy_content.get_media_display_path}}">
+            <div  style="color: white;"></div>
+            {% endif %}
+            <a href="{{ enjoy_content.get_pre_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'><</a>
+            <button type="button" id="favorite_button" class="btn {{ favorite_class }}" style="margin: 16px;" data-url_root="{% url 'accounts:add_favorite' %}">{{ favorite_text }}</button>
+            <a href="{{ enjoy_content.get_next_media_absolute_url }}" style='font-size: 28px;background-color: #c9d6de;border: none;padding:0px 128px;margin: 16px;'>></a>
+        </div>
+        <div id="side_ad_right" class="col-xs-2"></div>
     </div>
 </div>
+<script>
+    var player = fluidPlayer('my-video',
+            {
+                layoutControls:{
+                    loop:true,
+                    fillToContainer:true
+                },
+                vastOptions : {
+                    "adList" : [{
+                        "vAlign" : "middle",
+                        "roll" : "preRoll",
+                        "vastTag" : "https://syndication.realsrv.com/splash.php?idzone=4054500"
+                    }]
+                }
+            }
+        );
+</script>
 {% endblock main %}

@@ -1,4 +1,6 @@
 import os
+import random
+from PIL import Image, ImageDraw, ImageFont
 
 from blog.models import Poster, Media
 
@@ -18,6 +20,9 @@ def disk_stat(folder):
     # 使用比例
     hd['used_proportion'] = float(hd['used']) / float(hd['total'])
     return hd
+
+
+clear_errors = {}
 
 
 # 遍历媒体存储文件夹，删除垃圾文件（数据库中无记录文件夹）
@@ -60,13 +65,18 @@ def folder_clear():
                         # media 库中图片和视频分类均无，直接删除
                         media_path = path + "/" + file_name
                         media_file_size = os.path.getsize(media_path)
-                        os.remove(media_path)
+                        try:
+                            os.remove(media_path)
+                        except Exception as e:
+                            clear_errors["error"] = e
+                            continue
                         delete_count += 1
                         recover_byte = recover_byte + media_file_size
 
     clear_result['scan_count'] = scan_count
     clear_result['delete_count'] = delete_count
     clear_result['recover_byte'] = recover_byte
+    clear_result['errors'] = clear_errors
     return clear_result
 
 
@@ -83,5 +93,40 @@ def judge_media_file_to_delete(media, media_type):
             media_local_path = media.local_video_url
         else:
             media_local_path = media.local_url
-        os.remove(media_local_path)
-        return True
+        try:
+            os.remove(media_local_path)
+            return True
+        except Exception as e:
+            clear_errors["error"] = e
+            return False
+
+
+def image_add_water_mark(image_path):
+    # 组织路径
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    # 字库路径
+    font_path = os.path.join(base_dir, 'blog/static/font/HFHeson.ttf')
+    if image_path:
+        origin_image = Image.open(image_path)
+        print("image open ok...")
+        img = origin_image.copy()
+        draw = ImageDraw.Draw(img)
+        text = "viptuimeizi.com"
+        font = ImageFont.truetype(font_path, 28)
+        # 画图
+        text_size_x, text_size_y = draw.textsize(text, font=font)
+        # 设置文本位置
+        # 右下
+        text_position_bottom_right = (img.size[0] - (text_size_x + 10), img.size[1] - (text_size_y + 10))
+        # 左下
+        text_position_bottom_left = (10, img.size[1] - (text_size_y + 10))
+        # 中下
+        text_position_bottom_center = (img.size[0] // 2 - text_size_x // 2, img.size[1] - (text_size_y + 10))
+        # 左上
+        text_position_upper_left = (10, 10)
+        # 右上
+        text_position_upper_right = (img.size[0] - (text_size_x + 10), 10)
+        position_box = [text_position_bottom_right, text_position_bottom_left, text_position_bottom_center, text_position_upper_left, text_position_upper_right]
+
+        draw.text(position_box[random.randint(0, 4)], text, (255, 255, 255), font=font)
+        img.save(image_path)

@@ -3,10 +3,11 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 
 from .models import Post, Category, Tag, Poster, Media
-from .utils import tweets_operator, system_tools
+from .utils import tweets_operator
 from analytics import models
 
 from accounts.models import Favorite
+from blog.utils import system_tools
 
 
 # Create your views here.
@@ -62,6 +63,7 @@ def enjoy(request, media_id_str):
     models.count('', 'enjoy', request)
     # 获取media数据
     media = Media.objects.get(media_id_str=media_id_str)
+
     # 获取poster数据
     poster = Poster.objects.get(user_id_str=media.user_id_str)
     # get favorite data

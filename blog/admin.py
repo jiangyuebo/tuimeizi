@@ -68,7 +68,11 @@ class MediaAdmin(admin.ModelAdmin):
         clear_kb = float(clear_result['recover_byte']) / 1024
         clear_mb = clear_kb / 1024
         clear_space = format(clear_mb, '.2f')
-        result_str = "清理完成： 扫描文件：" + str(clear_result['scan_count']) + "个，删除文件：" + str(clear_result['delete_count']) + "个，获得空间：" + str(clear_space) + "mb"
+        clear_errors = clear_result['errors']
+        if clear_errors:
+            result_str = clear_errors
+        else:
+            result_str = "清理完成： 扫描文件：" + str(clear_result['scan_count']) + "个，删除文件：" + str(clear_result['delete_count']) + "个，获得空间：" + str(clear_space) + "mb"
         self.message_user(request, result_str)
 
     delete_no_owner_media_file.short_description = '删除磁盘中无主媒体文件'

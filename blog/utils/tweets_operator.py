@@ -5,9 +5,10 @@ import urllib.request
 from threading import Timer
 
 import tweepy
-from django.db.models import Q
+
 
 from blog.models import Poster, Media, DeletedMedia
+from blog.utils import system_tools
 
 one_fetch_tweets_count = 200
 
@@ -66,10 +67,10 @@ def save_poster_data_into_database(poster):
 
 
 # 获取目标用户组 可选参数：poster中文名
-def load_target_posters(poster_user_name=''):
+def load_target_posters(poster_screen_name=''):
     try:
-        if poster_user_name:
-            poster_list = Poster.objects.filter(Q(user_name__icontains=poster_user_name))
+        if poster_screen_name:
+            poster_list = Poster.objects.filter(user_screen_name=poster_screen_name)
         else:
             poster_list = Poster.objects.all()
         return poster_list
@@ -335,7 +336,10 @@ def download_file_from_url(store_dev, store_full_path, url):
         # 判断文件是否存在
         if not os.path.isfile(store_full_path):
             # 不存在，下载
-            urllib.request.urlretrieve(url, store_full_path)
+            result = urllib.request.urlretrieve(url, store_full_path)
+            if result:
+                # 下载结束，加水印
+                system_tools.image_add_water_mark(store_full_path)
     except Exception as e:
         print('error :', e)
 
