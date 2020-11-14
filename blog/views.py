@@ -7,7 +7,6 @@ from .utils import tweets_operator
 from analytics import models
 
 from accounts.models import Favorite
-from blog.utils import system_tools
 
 
 # Create your views here.
@@ -168,8 +167,12 @@ def favorite(request):
         favorite_media_list = []
         for favorite_item in favorite_list_all:
             media_id_str = favorite_item.favorite_media_id
-            media = Media.objects.filter(media_id_str=media_id_str)[0]
-            favorite_media_list.append(media)
+            # 判断收藏内容还是否存在
+            if media_id_str:
+                media = Media.objects.filter(media_id_str=media_id_str)[0]
+                favorite_media_list.append(media)
+            else:
+                continue
 
         # 分页
         media_list = []
