@@ -45,33 +45,39 @@ def folder_clear():
                 if media_set:
                     # 有这个图片媒体文件, 判断是否有主
                     for media in media_set:
-                        media_file_size = os.path.getsize(media.local_url)
-                        is_deleted = judge_media_file_to_delete(media, "pic")
-                        if is_deleted:
-                            delete_count += 1
-                            recover_byte = recover_byte + media_file_size
+                        if media.local_url:
+                            # 判断文件是否存在
+                            if os.path.exists(media.local_url):
+                                media_file_size = os.path.getsize(media.local_url)
+                                is_deleted = judge_media_file_to_delete(media, "pic")
+                                if is_deleted:
+                                    delete_count += 1
+                                    recover_byte = recover_byte + media_file_size
                 else:
                     # 查询是否视频类型
                     media_video_set = Media.objects.filter(local_video_url__endswith=file_name)
                     if media_video_set:
                         # 判断此文件是否有主(poster)
                         for media in media_set:
-                            media_file_size = os.path.getsize(media.local_video_url)
-                            is_deleted = judge_media_file_to_delete(media, "video")
-                            if is_deleted:
-                                delete_count += 1
-                                recover_byte = recover_byte + media_file_size
+                            if media.local_video_url:
+                                if os.path.exists(media.local_video_url):
+                                    media_file_size = os.path.getsize(media.local_video_url)
+                                    is_deleted = judge_media_file_to_delete(media, "video")
+                                    if is_deleted:
+                                        delete_count += 1
+                                        recover_byte = recover_byte + media_file_size
                     else:
                         # media 库中图片和视频分类均无，直接删除
                         media_path = path + "/" + file_name
-                        media_file_size = os.path.getsize(media_path)
-                        try:
-                            os.remove(media_path)
-                        except Exception as e:
-                            clear_errors["error"] = e
-                            continue
-                        delete_count += 1
-                        recover_byte = recover_byte + media_file_size
+                        if os.path.exists(media_path):
+                            media_file_size = os.path.getsize(media_path)
+                            try:
+                                os.remove(media_path)
+                            except Exception as e:
+                                clear_errors["error"] = e
+                                continue
+                            delete_count += 1
+                            recover_byte = recover_byte + media_file_size
 
     clear_result['scan_count'] = scan_count
     clear_result['delete_count'] = delete_count
