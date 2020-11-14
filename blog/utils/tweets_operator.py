@@ -339,7 +339,9 @@ def download_file_from_url(store_dev, store_full_path, url):
             result = urllib.request.urlretrieve(url, store_full_path)
             if result:
                 # 下载结束，加水印
-                system_tools.image_add_water_mark(store_full_path)
+                # 判断是否图片
+                if store_full_path.lower().endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
+                    system_tools.image_add_water_mark(store_full_path)
     except Exception as e:
         print('error :', e)
 

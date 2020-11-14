@@ -48,11 +48,15 @@ def folder_clear():
                         if media.local_url:
                             # 判断文件是否存在
                             if os.path.exists(media.local_url):
-                                media_file_size = os.path.getsize(media.local_url)
-                                is_deleted = judge_media_file_to_delete(media, "pic")
-                                if is_deleted:
-                                    delete_count += 1
-                                    recover_byte = recover_byte + media_file_size
+                                try:
+                                    media_file_size = os.path.getsize(media.local_url)
+                                    is_deleted = judge_media_file_to_delete(media, "pic")
+                                    if is_deleted:
+                                        delete_count += 1
+                                        recover_byte = recover_byte + media_file_size
+                                except Exception as e:
+                                    clear_errors["error"] = e
+                                    continue
                 else:
                     # 查询是否视频类型
                     media_video_set = Media.objects.filter(local_video_url__endswith=file_name)
@@ -61,17 +65,21 @@ def folder_clear():
                         for media in media_set:
                             if media.local_video_url:
                                 if os.path.exists(media.local_video_url):
-                                    media_file_size = os.path.getsize(media.local_video_url)
-                                    is_deleted = judge_media_file_to_delete(media, "video")
-                                    if is_deleted:
-                                        delete_count += 1
-                                        recover_byte = recover_byte + media_file_size
+                                    try:
+                                        media_file_size = os.path.getsize(media.local_video_url)
+                                        is_deleted = judge_media_file_to_delete(media, "video")
+                                        if is_deleted:
+                                            delete_count += 1
+                                            recover_byte = recover_byte + media_file_size
+                                    except Exception as e:
+                                        clear_errors["error"] = e
+                                        continue
                     else:
                         # media 库中图片和视频分类均无，直接删除
                         media_path = path + "/" + file_name
                         if os.path.exists(media_path):
-                            media_file_size = os.path.getsize(media_path)
                             try:
+                                media_file_size = os.path.getsize(media_path)
                                 os.remove(media_path)
                             except Exception as e:
                                 clear_errors["error"] = e
@@ -114,7 +122,6 @@ def image_add_water_mark(image_path):
     font_path = os.path.join(base_dir, 'blog/static/font/HFHeson.ttf')
     if image_path:
         origin_image = Image.open(image_path)
-        print("image open ok...")
         img = origin_image.copy()
         draw = ImageDraw.Draw(img)
         text = "viptuimeizi.com"
