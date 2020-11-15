@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+<script>
+$(function(){
+    pushHistory();
+    window.addEventListener('popstate', function(e){
+        var storage = window.sessionStorage;
+        location.href=storage.current_detail_url;
+    }, false);
+
+    function pushHistory(){
+        var url = "#";
+        var state = {
+            title: "title",
+            url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    }
+});
+</script>
+<div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">{{ error_title }}</div>
+      <div class="panel-body">{{ error_content }}</div>
+    </div>
+</div>
+{% endblock main %}

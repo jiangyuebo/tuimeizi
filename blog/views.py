@@ -60,22 +60,29 @@ def detail(request, user_id_str):
 # 查看大图
 def enjoy(request, media_id_str):
     models.count('', 'enjoy', request)
-    # 获取media数据
-    media = Media.objects.get(media_id_str=media_id_str)
 
-    # 获取poster数据
-    poster = Poster.objects.get(user_id_str=media.user_id_str)
-    # get favorite data
+    # 获取media数据
     try:
-        Favorite.objects.get(favorite_media_id=media_id_str, favorite_user=request.user)
-        favorite_class = 'btn-success'
-        favorite_text = '已收藏'
+        media = Media.objects.get(media_id_str=media_id_str)
+
+        # 获取poster数据
+        poster = Poster.objects.get(user_id_str=media.user_id_str)
+        # get favorite data
+        try:
+            Favorite.objects.get(favorite_media_id=media_id_str, favorite_user=request.user)
+            favorite_class = 'btn-success'
+            favorite_text = '已收藏'
+        except Exception as e:
+            favorite_class = 'btn-danger'
+            favorite_text = '收藏'
+        return render(request, 'blog/enjoy.html', context={
+            'enjoy_content': media, 'poster': poster, 'favorite_class': favorite_class, 'favorite_text': favorite_text
+        })
     except Exception as e:
-        favorite_class = 'btn-danger'
-        favorite_text = '收藏'
-    return render(request, 'blog/enjoy.html', context={
-        'enjoy_content': media, 'poster': poster, 'favorite_class': favorite_class, 'favorite_text': favorite_text
-    })
+        return render(request, 'blog/error.html', context={
+            'error_title': '哎哟！',
+            'error_content': '该图片已经被删除了！每次更新后系统会删除无用图片及视频，请重新进入相关妹子继续使用。谢谢！'
+        })
 
 
 # 归档列表
