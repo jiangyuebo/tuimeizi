@@ -65,6 +65,11 @@ def enjoy(request, media_id_str):
     try:
         media = Media.objects.get(media_id_str=media_id_str)
 
+        post_text_origin = media.post_text
+        # split 去掉文字后面的链接
+        str_list = post_text_origin.split("https")
+        media.post_text = str_list[0]
+
         # 获取poster数据
         poster = Poster.objects.get(user_id_str=media.user_id_str)
         # get favorite data
