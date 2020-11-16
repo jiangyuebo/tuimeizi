@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+<!--<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>-->
 <script>
 $(function(){
     pushHistory();
@@ -82,21 +82,21 @@ $(document).ready(function(){
         <div id="side_ad_right" class="col-xs-2"></div>
     </div>
 </div>
-<script>
-    var player = fluidPlayer('my-video',
-            {
-                layoutControls:{
-                    loop:true,
-                    fillToContainer:true
-                },
-                vastOptions : {
-                    "adList" : [{
-                        "vAlign" : "middle",
-                        "roll" : "preRoll",
-                        "vastTag" : "https://syndication.realsrv.com/splash.php?idzone=4054500"
-                    }]
-                }
-            }
-        );
-</script>
+<!--<script>-->
+<!--    var player = fluidPlayer('my-video',-->
+<!--            {-->
+<!--                layoutControls:{-->
+<!--                    loop:true,-->
+<!--                    fillToContainer:true-->
+<!--                },-->
+<!--                vastOptions : {-->
+<!--                    "adList" : [{-->
+<!--                        "vAlign" : "middle",-->
+<!--                        "roll" : "preRoll",-->
+<!--                        "vastTag" : "https://syndication.realsrv.com/splash.php?idzone=4054500"-->
+<!--                    }]-->
+<!--                }-->
+<!--            }-->
+<!--        );-->
+<!--</script>-->
 {% endblock main %}
