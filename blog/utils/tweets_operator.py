@@ -72,7 +72,7 @@ def load_target_posters(poster_screen_name=''):
         if poster_screen_name:
             poster_list = Poster.objects.filter(user_screen_name=poster_screen_name)
         else:
-            poster_list = Poster.objects.all()
+            poster_list = Poster.objects.order_by("created_time")
         return poster_list
     except Poster.DoesNotExist:
         print('无目标 poster 存在')
