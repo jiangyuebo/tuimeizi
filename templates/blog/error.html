@@ -18,6 +18,15 @@ $(function(){
         };
         window.history.pushState(state, "title", "#");
     }
+
+
+});
+
+$(document).ready(function(){
+    $("#back_button").click(function(){
+        var storage = window.sessionStorage;
+        location.href=storage.current_detail_url;
+    });
 });
 </script>
 <div class="container">
@@ -25,5 +34,6 @@ $(function(){
       <div class="panel-heading">{{ error_title }}</div>
       <div class="panel-body">{{ error_content }}</div>
     </div>
+    <button id="back_button" type="button" class="btn btn-primary btn-block">返回</button>
 </div>
 {% endblock main %}
