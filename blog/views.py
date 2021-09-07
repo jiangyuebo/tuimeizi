@@ -27,7 +27,7 @@ def index(request):
     # 分页
     if posters_covers_list_all is not None and len(posters_covers_list_all) > 0:
         paginator = Paginator(posters_covers_list_all, 12)
-        page = request.GET.get('page')
+        page = request.GET.get('page', 1)
         posters_covers_list = paginator.get_page(page)
         page_round = getRoundPage(page, paginator)
 
