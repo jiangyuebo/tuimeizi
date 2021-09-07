@@ -23,14 +23,17 @@ def index(request):
         posters_covers_list_all = load_target_posters_cover(poster_list)
 
     posters_covers_list = []
+    page_round = []
     # 分页
     if posters_covers_list_all is not None and len(posters_covers_list_all) > 0:
         paginator = Paginator(posters_covers_list_all, 12)
         page = request.GET.get('page')
         posters_covers_list = paginator.get_page(page)
+        page_round = getRoundPage(page, paginator)
 
     return render(request, 'blog/index.html', context={
         'posters_covers_list': posters_covers_list,
+        'page_round': page_round
     })
 
 
