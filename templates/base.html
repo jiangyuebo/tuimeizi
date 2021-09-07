@@ -3,7 +3,7 @@
 {% load blog_extras %}
 <html>
 <head>
-    <title>推妹子</title>
+    <title id="page_title">推妹子</title>
 
     <!-- meta -->
     <meta charset="UTF-8">
@@ -34,14 +34,12 @@
             if(isMobile()){
                 // mobile
                 ad_content_exo = "<iframe src='//a.realsrv.com/iframe.php?idzone=4054076&size=300x100' width='300' height='100' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";
-                ad_content_vpn = "<a href='https://www.purevpn.com/order-now.php?aff=44101&amp;a_bid=1b94136a' target='_top'><img src='//affiliates.purevpn.com/accounts/default1/6hb82wqa2l/1b94136a.png' alt='' title='' width='320' height='50' /></a>";
-                $("#ad_banner").html(ad_content_exo + ad_content_vpn);
+                $("#ad_banner").html(ad_content_exo);
             }else{
                 // not mobile
                 ad_content = "<iframe src='//a.realsrv.com/iframe.php?idzone=3920750&size=900x250' width='900' height='250' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";
-                ad_content_vpn = "<a href='https://www.purevpn.com/order-now.php?aff=44101&amp;a_bid=920607c7' target='_top'><img src='//affiliates.purevpn.com/accounts/default1/6hb82wqa2l/920607c7.png' alt='' title='' width='900' height='111g' /></a>";
 
-                $("#ad_banner").html(ad_content + ad_content_vpn);
+                $("#ad_banner").html(ad_content);
 
                 ad_content_left = "<iframe src='//a.realsrv.com/iframe.php?idzone=4062229&size=160x600' width='160' height='600' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";
                 ad_content_right = "<iframe src='//a.realsrv.com/iframe.php?idzone=4062238&size=160x600' width='160' height='600' scrolling='no' marginwidth='0' marginheight='0' frameborder='0'></iframe>";

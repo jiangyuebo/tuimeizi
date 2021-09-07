@@ -51,9 +51,15 @@ $(function(){
         {% endif %}
     </span>
 
-    <span class="current">
-        {{ media_list.number }} / {{ media_list.paginator.num_pages }}
-    </span>
+    <ul class="pagination">
+    {% for num in page_round %}
+        {% if media_list.number == num %}
+            <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+        {% else %}
+            <li ><a href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
 
     <span>
         {% if media_list.has_next %}

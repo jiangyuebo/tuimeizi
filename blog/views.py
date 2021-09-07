@@ -46,15 +46,37 @@ def detail(request, user_id_str):
     poster_user_name = poster.user_name
     # 分页
     media_list = []
+    page_round = []
     if len(media_list_all) > 0:
         paginator = Paginator(media_list_all, 12)
-        page = request.GET.get('page')
+        page = request.GET.get('page', 1)
         media_list = paginator.get_page(page)
+        page_round = getRoundPage(page, paginator)
 
     return render(request, 'blog/detail.html', context={
         'media_list': media_list,
-        'user_name': poster_user_name
+        'user_name': poster_user_name,
+        'page_round': page_round
     })
+
+
+def getRoundPage(current_num, paginator):
+    # 大于11页时
+    if paginator.num_pages > 11:
+        # 当前页码的后5页数超过最大页码时，显示最后10项
+        if int(current_num) + 5 > paginator.num_pages:
+            page_range = range(paginator.num_pages - 10, paginator.num_pages + 1)
+        # 当前页码的前5页数为负数时，显示开始的10项
+        elif int(current_num) - 5 < 1:
+            page_range = range(1, 12)
+        else:
+            # 显示左5页到右5页的页码
+            page_range = range(int(current_num) - 5, int(current_num) + 5 + 1)
+    # 小于11页时显示所有页码
+    else:
+        page_range = paginator.page_range
+
+    return page_range
 
 
 # 查看大图
