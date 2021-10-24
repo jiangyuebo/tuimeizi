@@ -313,7 +313,11 @@ def get_poster_local_store_dev_path(poster_screen_name):
     # 判断磁盘空间
     media_store_path = project_path + "/" + "media/"
     # 计算可用空间
-    get_free_space_size(media_store_path)
+    local_media_disk_free_size = get_free_space_size(media_store_path)
+    if local_media_disk_free_size < 1024:
+        media_store_path = project_path + "/mnt/media_data/"
+        expanse_free_size = get_free_space_size(media_store_path)
+        print(f"扩展磁盘路径：可用磁盘空间: {expanse_free_size} MB")
     # 存储文件夹路径
     dest_dev = media_store_path + poster_screen_name
     return dest_dev
@@ -324,6 +328,7 @@ def get_free_space_size(path):
     info = os.statvfs(path)
     free_size = info.f_frsize * info.f_bavail / 1024 / 1024
     print(f'可用磁盘空间：{free_size} MB')
+    return free_size
 
 
 # 存储media数据到数据库
