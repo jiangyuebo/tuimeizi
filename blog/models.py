@@ -129,13 +129,22 @@ class Media(models.Model):
         return media_data
 
     def get_media_display_path(self):
-        path_list = self.local_url.split('/media/')
-        path = '/media/' + path_list[1]
+        # 判断是否包含mnt
+        if "mnt" in self.local_url:
+            # 是扩展存储
+            path = self.local_url
+        else:
+            path_list = self.local_url.split('/media/')
+            path = '/media/' + path_list[1]
         return path
 
     def get_video_display_path(self):
-        path_list = self.local_video_url.split('/media/')
-        path = '/media/' + path_list[1]
+        # 判断是否包含mnt
+        if "mnt" in self.local_url:
+            path = self.local_video_url
+        else:
+            path_list = self.local_video_url.split('/media/')
+            path = '/media/' + path_list[1]
         return path
 
     def get_absolute_url(self):
