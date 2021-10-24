@@ -310,10 +310,20 @@ def get_file_local_full_path(poster_screen_name, file_name):
 def get_poster_local_store_dev_path(poster_screen_name):
     # 获取工程路径
     project_path = os.getcwd()
+    # 判断磁盘空间
     media_store_path = project_path + "/" + "media/"
+    # 计算可用空间
+    get_free_space_size(media_store_path)
     # 存储文件夹路径
     dest_dev = media_store_path + poster_screen_name
     return dest_dev
+
+
+# 计算文件夹可用可用空间
+def get_free_space_size(path):
+    info = os.statvfs(path)
+    free_size = info.f_frsize * info.f_bavail / 1024 / 1024
+    print(f'可用磁盘空间：{free_size} MB')
 
 
 # 存储media数据到数据库
