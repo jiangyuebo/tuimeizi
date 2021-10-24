@@ -132,7 +132,8 @@ class Media(models.Model):
         # 判断是否包含mnt
         if "mnt" in self.local_url:
             # 是扩展存储
-            path = self.local_url
+            path_list = self.local_url.split('/media/')
+            path = '/media/mnt' + path_list[1]
         else:
             path_list = self.local_url.split('/media/')
             path = '/media/' + path_list[1]
@@ -141,7 +142,8 @@ class Media(models.Model):
     def get_video_display_path(self):
         # 判断是否包含mnt
         if "mnt" in self.local_url:
-            path = self.local_video_url
+            path_list = self.local_video_url.split('/media/')
+            path = '/media/mnt' + path_list[1]
         else:
             path_list = self.local_video_url.split('/media/')
             path = '/media/' + path_list[1]
