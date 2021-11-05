@@ -327,7 +327,6 @@ def get_poster_local_store_dev_path(poster_screen_name):
 def get_free_space_size(path):
     info = os.statvfs(path)
     free_size = info.f_frsize * info.f_bavail / 1024 / 1024
-    print(f'可用磁盘空间：{free_size} MB')
     return free_size
 
 
