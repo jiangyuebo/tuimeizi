@@ -316,8 +316,6 @@ def get_poster_local_store_dev_path(poster_screen_name):
     local_media_disk_free_size = get_free_space_size(media_store_path)
     if local_media_disk_free_size < 1024:
         media_store_path = project_path + "/" + "media/mnt/"
-        expanse_free_size = get_free_space_size(media_store_path)
-        print(f"扩展磁盘路径：可用磁盘空间: {expanse_free_size} MB")
     # 存储文件夹路径
     dest_dev = media_store_path + poster_screen_name
     return dest_dev
