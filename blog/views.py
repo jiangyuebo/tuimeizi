@@ -106,7 +106,11 @@ def enjoy(request, media_id_str):
             favorite_class = 'btn-danger'
             favorite_text = '收藏'
         return render(request, 'blog/enjoy.html', context={
-            'enjoy_content': media, 'poster': poster, 'favorite_class': favorite_class, 'favorite_text': favorite_text
+            'enjoy_content': media,
+            'poster': poster,
+            'favorite_class': favorite_class,
+            'favorite_text': favorite_text,
+            'media_id_str': media_id_str
         })
     except Exception as e:
         return render(request, 'blog/error.html', context={

@@ -31,7 +31,7 @@ $(document).ready(function(){
             return;
 
         flag = false;
-        var media_id_str = $("#media_id_str").text();
+        var media_id_str = $("#media_id_str").val();
         $.ajax({
             url: $("#favorite_button").data('url_root'),
             data: {'media_id_str':media_id_str},
@@ -63,6 +63,7 @@ $(document).ready(function(){
 </div>
 <div class="enjoy-image-div">
     <div class="row">
+        <input id="media_id_str" value="{{enjoy_content.media_id_str}}">
         <div id="side_ad_left" class="col-xs-2"></div>
         <div class="col-xs-8">
             {% if enjoy_content.media_type == 'video' %}
