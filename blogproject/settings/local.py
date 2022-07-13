@@ -3,7 +3,7 @@ from .common import *
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mh97fl=2_!6n(e7)obj%ix5n%_95d+%-xxamdi$slwvpd$uule'
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'viptuimeizi.com']
 
 # Application definition
 INSTALLED_APPS = [
