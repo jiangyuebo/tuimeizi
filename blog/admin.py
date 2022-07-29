@@ -3,6 +3,9 @@ from .models import Post, Category, Tag, Media, Poster, DeletedMedia
 
 from .utils import tweets_operator, system_tools
 
+from PIL import Image, ImageChops
+import dhash
+
 
 class PostAdmin(admin.ModelAdmin):
     # 控制post列表展示字段
@@ -21,11 +24,97 @@ class PosterAdmin(admin.ModelAdmin):
     fields = ['user_screen_name', 'category']
     # 后台列表展示字段
     list_display = ('user_id_str', 'user_screen_name', 'user_name', 'category', 'poster_views')
+    # 增加自定义按钮
+    actions = ['delete_duplicate_images_from_poster']
 
     # 重写poster保存方法
     def save_model(self, request, obj, form, change):
         tweets_operator.setup_poster_and_fetch_tweets(obj.user_screen_name, obj.category)
         self.message_user(request, '添加成功')
+
+    def delete_duplicate_images_from_poster(self, request, queryset):
+        for poster in queryset:
+            # 获取poster id
+            poster_id_str = poster.user_id_str
+            # 遍历该poster所有media
+            poster_media = Media.objects.filter(user_id_str=poster_id_str)
+            hash_image_dic = {}
+            for media in poster_media:
+                # 媒体文件类型
+                media_type = media.media_type
+                if not media_type == "video":
+                    # 媒体文件地址
+                    local_url = media.local_url
+                    # 计算图片 d hash 值
+                    d_hash_of_image = d_hash_of_the_image(local_url)
+                    d_hash_str = str(d_hash_of_image)
+                    # 判断当前字典中是否已存在这个hash的对象
+                    if d_hash_str in hash_image_dic.keys():
+                        # 已存在该 d hash的图片
+                        # 判断当前图片是否封面
+                        if media.is_cover:
+                            # 是封面，删除另外一张
+                            target_media = hash_image_dic[d_hash_str]
+                            target_media_local_url = target_media.local_url
+                            # 记录删除媒体
+                            deleted_media_record = DeletedMedia(post_id_str=target_media.post_id_str,
+                                                                media_id_str=target_media.media_id_str)
+                            deleted_media_record.save()
+                            # 删除文件
+                            tweets_operator.delete_local_file_by_path(target_media_local_url)
+                            # 删除数据
+                            target_media.delete()
+
+                            # 并将当前这张放入字典
+                            hash_image_dic[d_hash_str] = media
+                            print("删除一张")
+                        else:
+                            # 不是封面，删除当前这张
+                            # 记录删除媒体
+                            deleted_media_record = DeletedMedia(post_id_str=media.post_id_str,
+                                                                media_id_str=media.media_id_str)
+                            deleted_media_record.save()
+
+                            media_local_url = media.local_url
+                            # 删除文件
+                            tweets_operator.delete_local_file_by_path(media_local_url)
+                            # 删除信息
+                            media.delete()
+                            print("删除一张")
+                    else:
+                        # 不存在该 d hash的图片,存入
+                        hash_image_dic[d_hash_str] = media
+
+        self.message_user(request, '清除完成')
+
+    delete_duplicate_images_from_poster.short_description = "专辑图片去重"
+
+
+# 对比两张图片是否一样
+def compare_images(path_one, path_two):
+    image_one = Image.open(path_one)
+    image_two = Image.open(path_two)
+
+    try:
+        diff = ImageChops.difference(image_one, image_two)
+        if diff.getbbox() is None:
+            # 图片完全一样
+            return True
+        else:
+            return False
+    except ValueError:
+        pass
+
+
+# 计算图片的 d hash
+def d_hash_of_the_image(image_path):
+    the_image = Image.open(image_path)
+    try:
+        row, col = dhash.dhash_row_col(the_image)
+        the_d_hash = dhash.format_hex(row, col)
+        return the_d_hash
+    except OSError:
+        pass
 
 
 @admin.register(Media)
@@ -87,6 +176,7 @@ class DeletedMediaAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
+admin.AdminSite.site_header = 'TuiMeiZi'
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category)
 admin.site.register(Tag)
