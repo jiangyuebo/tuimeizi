@@ -362,7 +362,7 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                     d_hash_str = str(d_hash_of_image)
                     # 判断hash记录中是否已存在该图片
                     try:
-                        d_hash_record = MediaDHashRecord.objects.get(d_hash=d_hash_str)
+                        MediaDHashRecord.objects.get(d_hash=d_hash_str)
                         # 已存在，删除图片
                         # 记录删除媒体
                         deleted_media_record = DeletedMedia(post_id_str=media_item.post_id_str,
@@ -375,7 +375,7 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                     except MediaDHashRecord.DoesNotExist:
                         # 不存在，保留媒体，并记录hash
                         media_d_hash_record = MediaDHashRecord(
-                            d_hash=d_hash_record
+                            d_hash=d_hash_str
                         )
                         media_d_hash_record.save()
                         # 打水印
