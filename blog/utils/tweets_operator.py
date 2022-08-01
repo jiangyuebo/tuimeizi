@@ -251,7 +251,7 @@ def tweetsOperator(statusDatas):
                         # 获取文件夹路径
                         dest_dev_path = get_poster_local_store_dev_path(user_screen_name)
                         # 存储图片
-                        download_file_from_url(dest_dev_path, dest_file_full_path, media_url)
+                        download_file_from_url(media_data, dest_dev_path, dest_file_full_path, media_url)
 
                         if media_type == 'video':
                             video_info_list = media['video_info']['variants']
@@ -284,7 +284,7 @@ def tweetsOperator(statusDatas):
                                     media_just_saved.save()
 
                                 # 下载视频媒体文件
-                                download_file_from_url(dest_dev_path, dest_video_full_path, http_video_url)
+                                download_file_from_url(media_data, dest_dev_path, dest_video_full_path, http_video_url)
 
             index = index + 1
 
