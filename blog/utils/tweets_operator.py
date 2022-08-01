@@ -3,8 +3,12 @@ import os
 import time
 import urllib.request
 from threading import Timer
+from PIL import Image, ImageChops
 
 import tweepy
+import dhash
+
+from blog.models import MediaDHashRecord
 
 
 from blog.models import Poster, Media, DeletedMedia
@@ -253,7 +257,7 @@ def tweetsOperator(statusDatas):
                             video_info_list = media['video_info']['variants']
                             bitrate_temp = 0
                             best_video_url = ""
-                            video_file_name = ""
+
                             # 获取最高清视频地址
                             for video_info in video_info_list:
                                 if 'bitrate' in video_info:
@@ -339,8 +343,8 @@ def save_media_data_into_database(media):
 
 
 # 下载文件到本地
-# 用户名/文件名/下载URL
-def download_file_from_url(store_dev, store_full_path, url):
+# 数据对象/用户名/文件名/下载URL
+def download_file_from_url(media_item, store_dev, store_full_path, url):
     try:
         # 判断文件夹是否存在，不存在责创建
         if not os.path.exists(store_dev):
@@ -353,9 +357,42 @@ def download_file_from_url(store_dev, store_full_path, url):
                 # 下载结束，加水印
                 # 判断是否图片
                 if store_full_path.lower().endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
-                    system_tools.image_add_water_mark(store_full_path)
+                    # 打水印前计算D Hash
+                    d_hash_of_image = d_hash_of_the_image(store_full_path)
+                    d_hash_str = str(d_hash_of_image)
+                    # 判断hash记录中是否已存在该图片
+                    try:
+                        d_hash_record = MediaDHashRecord.objects.get(d_hash=d_hash_str)
+                        # 已存在，删除图片
+                        # 记录删除媒体
+                        deleted_media_record = DeletedMedia(post_id_str=media_item.post_id_str,
+                                                            media_id_str=media_item.media_id_str)
+                        deleted_media_record.save()
+                        # 删除数据
+                        media_item.delete()
+                        # 删除文件
+                        d_hash_of_the_image(store_full_path)
+                    except MediaDHashRecord.DoesNotExist:
+                        # 不存在，保留媒体，并记录hash
+                        media_d_hash_record = MediaDHashRecord(
+                            d_hash=d_hash_record
+                        )
+                        media_d_hash_record.save()
+                        # 打水印
+                        system_tools.image_add_water_mark(store_full_path)
     except Exception as e:
         print('error :', e)
+
+
+# 计算图片的 d hash
+def d_hash_of_the_image(image_path):
+    the_image = Image.open(image_path)
+    try:
+        row, col = dhash.dhash_row_col(the_image)
+        the_d_hash = dhash.format_hex(row, col)
+        return the_d_hash
+    except OSError:
+        pass
 
 
 # 删除本地文件

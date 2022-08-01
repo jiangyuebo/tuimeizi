@@ -39,7 +39,10 @@ class PosterAdmin(admin.ModelAdmin):
             # 遍历该poster所有media
             poster_media = Media.objects.filter(user_id_str=poster_id_str)
             hash_image_dic = {}
+            # 计数
+            count = 0
             for media in poster_media:
+                count = count + 1
                 # 媒体文件类型
                 media_type = media.media_type
                 if not media_type == "video":
@@ -67,7 +70,7 @@ class PosterAdmin(admin.ModelAdmin):
 
                             # 并将当前这张放入字典
                             hash_image_dic[d_hash_str] = media
-                            print("删除一张")
+                            print("删除一张, 已处理: " + str(count))
                         else:
                             # 不是封面，删除当前这张
                             # 记录删除媒体
@@ -80,7 +83,7 @@ class PosterAdmin(admin.ModelAdmin):
                             tweets_operator.delete_local_file_by_path(media_local_url)
                             # 删除信息
                             media.delete()
-                            print("删除一张")
+                            print("删除一张, 已处理: " + str(count))
                     else:
                         # 不存在该 d hash的图片,存入
                         hash_image_dic[d_hash_str] = media

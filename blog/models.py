@@ -204,6 +204,12 @@ class Poster(models.Model):
         self.save(update_fields=['poster_views'])
 
 
+# 已删除媒体记录
 class DeletedMedia(models.Model):
     post_id_str = models.CharField('推文id', max_length=36)
     media_id_str = models.CharField('媒体资源ID', max_length=36)
+
+
+# 媒体D Hash值记录
+class MediaDHashRecord(models.Model):
+    d_hash = models.CharField('媒体文件D Hash值', max_length=300, blank=True, null=True)
