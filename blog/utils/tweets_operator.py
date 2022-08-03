@@ -383,7 +383,7 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                         # 打水印
                         system_tools.image_add_water_mark(store_full_path)
     except Exception as e:
-        print('error :', e)
+        print('download_file_from_url error :', e)
 
 
 # 计算图片的 d hash
