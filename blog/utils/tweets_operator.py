@@ -318,7 +318,7 @@ def get_poster_local_store_dev_path(poster_screen_name):
     media_store_path = project_path + "/" + "media/"
     # 计算可用空间
     local_media_disk_free_size = get_free_space_size(media_store_path)
-    if local_media_disk_free_size < 1024:
+    if local_media_disk_free_size < 10240:
         media_store_path = project_path + "/" + "media/mnt/"
     # 存储文件夹路径
     dest_dev = media_store_path + poster_screen_name
@@ -371,7 +371,7 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                         # 删除数据
                         media_item.delete()
                         # 删除文件
-                        d_hash_of_the_image(store_full_path)
+                        delete_local_file_by_path(store_full_path)
                     except MediaDHashRecord.DoesNotExist:
                         # 不存在，保留媒体，并记录hash
                         media_d_hash_record = MediaDHashRecord(
