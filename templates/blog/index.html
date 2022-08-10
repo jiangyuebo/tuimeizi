@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
+{% load i18n %}
 <script>
 $(function(){
     var url = window.location.href;
@@ -14,7 +15,7 @@ $(function(){
         <a href="{{ poster_cover_dic.poster.get_absolute_url }}">
             <img class="index-image" src={{ poster_cover_dic.cover.get_media_display_path }} alt="{{ poster_cover_dic.poster.user_screen_name }}">
             <div class="index-image-font-div">{{ poster_cover_dic.poster.user_name }}</div>
-            <div class="index-image-date-div">最新: {{ poster_cover_dic.cover.created_at }}</div>
+            <div class="index-image-date-div">{% trans "最新" %}: {{ poster_cover_dic.cover.created_at }}</div>
         </a>
     </div>
 {% endfor %}
@@ -23,7 +24,7 @@ $(function(){
     <span>
         {% if posters_covers_list.paginator %}
             {% if posters_covers_list.has_previous %}
-                <a href="?page={{ posters_covers_list.previous_page_number }}">上一页</a>
+                <a href="?page={{ posters_covers_list.previous_page_number }}">{% trans "上一页" %}</a>
             {% endif %}
 
             <ul class="pagination">
@@ -37,7 +38,7 @@ $(function(){
             </ul>
 
             {% if posters_covers_list.has_next %}
-                <a href="?page={{ posters_covers_list.next_page_number }}">下一页</a>
+                <a href="?page={{ posters_covers_list.next_page_number }}">{% trans "下一页" %}</a>
             {% endif %}
         {% endif %}
     </span>

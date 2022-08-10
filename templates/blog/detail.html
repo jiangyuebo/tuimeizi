@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
+{% load i18n %}
 <script>
 $(function(){
     var url = window.location.href;
@@ -47,7 +48,7 @@ $(function(){
 <div class="paginator">
     <span>
         {% if media_list.has_previous %}
-            <a href="?page={{ media_list.previous_page_number }}">上一页</a>
+            <a href="?page={{ media_list.previous_page_number }}">{% trans "上一页" %}</a>
         {% endif %}
     </span>
 
@@ -63,7 +64,7 @@ $(function(){
 
     <span>
         {% if media_list.has_next %}
-            <a href="?page={{ media_list.next_page_number }}">下一页</a>
+            <a href="?page={{ media_list.next_page_number }}">{% trans "下一页" %}</a>
         {% endif %}
     </span>
 </div>

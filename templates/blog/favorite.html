@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
+{% load i18n %}
 <script>
 $(function(){
     var url = window.location.href;
@@ -34,7 +35,7 @@ function delete_media(obj){
 }
 </script>
 <div class="detail-name-tag">
-    个人收藏
+    {% trans "个人收藏" %}
 </div>
 <div style="margin-top: 20px;" class="flex-container">
 {% for media in media_list %}
@@ -49,7 +50,7 @@ function delete_media(obj){
             </a>
         </div>
         <div class="panel-footer">
-            <button name="{% url 'accounts:delete_favorite' media.media_id_str %}" type="button" class="btn btn-danger" onclick="delete_media(this)">删除</button>
+            <button name="{% url 'accounts:delete_favorite' media.media_id_str %}" type="button" class="btn btn-danger" onclick="delete_media(this)">{% trans "删除" %}</button>
         </div>
     </div>
     {% else %}
@@ -60,20 +61,20 @@ function delete_media(obj){
             </a>
         </div>
         <div class="panel-footer">
-            <button name="{% url 'accounts:delete_favorite' media.media_id_str %}" type="button" class="btn btn-danger" onclick="delete_media(this)">删除</button>
+            <button name="{% url 'accounts:delete_favorite' media.media_id_str %}" type="button" class="btn btn-danger" onclick="delete_media(this)">{% trans "删除" %}</button>
         </div>
     </div>
     {% endif %}
 {% empty %}
 <div class="container">
-    <h3>这里空空如也...</h3>
+    <h3>{% trans "这里空空如也..." %}</h3>
 </div>
 {% endfor %}
 </div>
 <div class="paginator">
     <span>
         {% if media_list.has_previous %}
-            <a href="?page={{ media_list.previous_page_number }}">上一页</a>
+            <a href="?page={{ media_list.previous_page_number }}">{% trans "上一页" %}</a>
         {% endif %}
     </span>
 
@@ -83,7 +84,7 @@ function delete_media(obj){
 
     <span>
         {% if media_list.has_next %}
-            <a href="?page={{ media_list.next_page_number }}">下一页</a>
+            <a href="?page={{ media_list.next_page_number }}">{% trans "下一页" %}</a>
         {% endif %}
     </span>
 </div>
