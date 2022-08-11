@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load i18n %}
 {% load static %}
 {% load blog_extras %}
 <html>
@@ -97,12 +98,12 @@ ExoVideoSlider.init(adConfig);
         {% if user.is_authenticated %}
         <h5>
             <span class="hello-msg"><kbd>{{ request.user }}</kbd></span>
-            <span class="hello-msg"><a href="{% url 'accounts:logout' %}">退出</a></span>
+            <span class="hello-msg"><a href="{% url 'accounts:logout' %}">{% trans "退出" %}</a></span>
         </h5>
         {% else %}
         <h5>
-            <span class="hello-msg"><a href="{% url 'accounts:login' %}"><code>登录</code></a></span>
-            <span class="hello-msg"><a href="{% url 'accounts:register' %}"><code>注册</code></a></span>
+            <span class="hello-msg"><a href="{% url 'accounts:login' %}"><code>{% trans "登录" %}</code></a></span>
+            <span class="hello-msg"><a href="{% url 'accounts:register' %}"><code>{% trans "注册" %}</code></a></span>
         </h5>
         {% endif %}
     </div>
@@ -110,7 +111,7 @@ ExoVideoSlider.init(adConfig);
         <div class="row">
             <div class="col-md-4 col-sm-5 col-xs-8">
                 <div class="logo">
-                    <h1><a href="{% url 'blog:index' %}"><b>推</b>妹子</a><sub><font size="2">你的女神在这里</font></sub></h1>
+                    <h1><a href="{% url 'blog:index' %}"><b>推</b>妹子</a><sub><font size="2">{% trans "你的女神在这里" %}</font></sub></h1>
                 </div>
             </div><!-- col-md-4 -->
             <div class="col-md-8 col-sm-7 col-xs-4">
@@ -122,9 +123,9 @@ ExoVideoSlider.init(adConfig);
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="福利姬">福利姬</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'album:album' %}" data-hover="福利下载">福利下载</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'blog:favorite' %}" data-hover="收藏">收藏</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:index' %}" data-hover="妹子">{% trans "妹子" %}</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'album:album' %}" data-hover="下载">{% trans "下载" %}</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:favorite' %}" data-hover="收藏">{% trans "收藏" %}</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </nav>
@@ -132,7 +133,7 @@ ExoVideoSlider.init(adConfig);
                     <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
                     <div id="search-form" class="search-form">
                         <form role="search" method="get" id="searchform" action="{% url 'blog:search' %}">
-                            <input type="search" name="q" placeholder="搜索" required>
+                            <input type="search" name="q" placeholder="search" required>
                             <button type="submit"><span class="ion-ios-search-strong"></span></button>
                         </form>
                     </div>
@@ -166,9 +167,9 @@ ExoVideoSlider.init(adConfig);
     <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
     <nav>
         <ul>
-            <li><a href="{% url 'blog:index' %}">福利姬</a></li>
-            <li><a href="{% url 'album:album' %}">福利下载</a></li>
-            <li><a href="{% url 'blog:favorite' %}">收藏</a></li>
+            <li><a href="{% url 'blog:index' %}">{% trans "妹子" %}</a></li>
+            <li><a href="{% url 'album:album' %}">{% trans "下载" %}</a></li>
+            <li><a href="{% url 'blog:favorite' %}">{% trans "收藏" %}</a></li>
         </ul>
     </nav>
 </div>
