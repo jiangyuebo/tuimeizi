@@ -370,10 +370,17 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                         deleted_media_record.save()
                         # 删除数据
                         print("delete media id: " + str(media_item.id) + " path: " + store_full_path)
-                        media_item.delete()
-
                         # 删除文件
                         delete_local_file_by_path(store_full_path)
+                        if media_item.id:
+                            # id 有值，正常删除
+                            media_item.delete()
+                        else:
+                            # id 为None，根据path删除
+                            delete_media_list = Media.objects.filter(local_url=store_full_path)
+                            for delete_media in delete_media_list:
+                                delete_media.delete()
+
                     except MediaDHashRecord.DoesNotExist:
                         # 不存在，保留媒体，并记录hash
                         media_d_hash_record = MediaDHashRecord(

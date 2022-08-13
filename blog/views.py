@@ -41,8 +41,11 @@ def index(request):
 def detail(request, user_id_str):
     models.count('', 'detail', request)
     # 将该poster浏览数+1
-    poster = Poster.objects.get(user_id_str=user_id_str)
-    poster.increase_views()
+    try:
+        poster = Poster.objects.get(user_id_str=user_id_str)
+        poster.increase_views()
+    except Poster.DoesNotExist:
+        pass
     # 获取该poster所有作品
     media_list_all = Media.objects.filter(user_id_str=user_id_str).order_by("-id")
     # 获取该poster显示名
