@@ -369,7 +369,6 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                                                             media_id_str=media_item.media_id_str)
                         deleted_media_record.save()
                         # 删除数据
-                        print("delete media id: " + str(media_item.id) + " path: " + store_full_path)
                         # 删除文件
                         delete_local_file_by_path(store_full_path)
                         if media_item.id:
