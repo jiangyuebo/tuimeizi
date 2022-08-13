@@ -45,25 +45,30 @@ def detail(request, user_id_str):
         poster = Poster.objects.get(user_id_str=user_id_str)
         poster.increase_views()
     except Poster.DoesNotExist:
-        pass
-    # 获取该poster所有作品
-    media_list_all = Media.objects.filter(user_id_str=user_id_str).order_by("-id")
-    # 获取该poster显示名
-    poster_user_name = poster.user_name
-    # 分页
-    media_list = []
-    page_round = []
-    if len(media_list_all) > 0:
-        paginator = Paginator(media_list_all, 12)
-        page = request.GET.get('page', 1)
-        media_list = paginator.get_page(page)
-        page_round = getRoundPage(page, paginator)
+        # 找不到对应poster JS返回导致的“undefined”，跳转到首页
+        return index(request)
 
-    return render(request, 'blog/detail.html', context={
-        'media_list': media_list,
-        'user_name': poster_user_name,
-        'page_round': page_round
-    })
+    if user_id_str == "undefined":
+        return index(request)
+    else:
+        # 获取该poster所有作品
+        media_list_all = Media.objects.filter(user_id_str=user_id_str).order_by("-id")
+        # 获取该poster显示名
+        poster_user_name = poster.user_name
+        # 分页
+        media_list = []
+        page_round = []
+        if len(media_list_all) > 0:
+            paginator = Paginator(media_list_all, 12)
+            page = request.GET.get('page', 1)
+            media_list = paginator.get_page(page)
+            page_round = getRoundPage(page, paginator)
+
+        return render(request, 'blog/detail.html', context={
+            'media_list': media_list,
+            'user_name': poster_user_name,
+            'page_round': page_round
+        })
 
 
 def getRoundPage(current_num, paginator):
