@@ -10,7 +10,6 @@ import dhash
 
 from blog.models import MediaDHashRecord
 
-
 from blog.models import Poster, Media, DeletedMedia
 from blog.utils import system_tools
 
@@ -95,8 +94,8 @@ def fetch_tweets_data_from_target_posters_in_index(start_index, end_index):
     api = init_my_tweepy()
     poster_list = load_target_posters()
     if api is not None and poster_list is not None and len(poster_list) > 0:
-        if (len(poster_list)-1) < end_index:
-            end_index = len(poster_list)-1
+        if (len(poster_list) - 1) < end_index:
+            end_index = len(poster_list) - 1
         fetch_list = poster_list[start_index:end_index]
         fetch_tweets_from_posters(api, fetch_list)
 
@@ -225,7 +224,8 @@ def tweetsOperator(statusDatas):
                         media_url = media['media_url']
 
                         # 如果媒体已在删除列表中记录，跳过不进行下载
-                        deleted_media_record = DeletedMedia.objects.filter(post_id_str=post_id_str, media_id_str=media_id_str)
+                        deleted_media_record = DeletedMedia.objects.filter(post_id_str=post_id_str,
+                                                                           media_id_str=media_id_str)
                         if deleted_media_record:
                             # 如果有记录，此媒体不进行保存，跳到下一个
                             continue
@@ -353,10 +353,12 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
         if not os.path.isfile(store_full_path):
             # 不存在，下载
             result = urllib.request.urlretrieve(url, store_full_path)
+
             if result:
                 # 下载结束，加水印
                 # 判断是否图片
-                if store_full_path.lower().endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
+                if store_full_path.lower().endswith(
+                        ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
                     # 打水印前计算D Hash
                     d_hash_of_image = d_hash_of_the_image(store_full_path)
                     d_hash_str = str(d_hash_of_image)
@@ -387,9 +389,12 @@ def download_file_from_url(media_item, store_dev, store_full_path, url):
                         )
                         media_d_hash_record.save()
                         # 打水印
-                        system_tools.image_add_water_mark(store_full_path)
-    except Exception as e:
-        print('download_file_from_url error :', e)
+                        try:
+                            system_tools.image_add_water_mark(store_full_path)
+                        except:
+                            pass
+    except OSError:
+        pass
 
 
 # 计算图片的 d hash
