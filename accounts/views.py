@@ -84,7 +84,7 @@ def add_favorite(request):
         # login
         # check the favorite count
         favorite_count = Favorite.objects.filter(favorite_user=request.user).count()
-        if favorite_count < 10:
+        if favorite_count < 10000000000:
             # favorite less than 10
             media_id_str = request.POST["media_id_str"]
             operation = save_favorite_media(request.user, media_id_str)
