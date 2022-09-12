@@ -79,27 +79,28 @@ def logout_page(request):
 
 @csrf_exempt
 def add_favorite(request):
+    
     # determine whether user is logged or not
     if request.user.is_authenticated:
         # login
         # check the favorite count
-        favorite_count = Favorite.objects.filter(favorite_user=request.user).count()
-        if favorite_count < 10000000000:
-            # favorite less than 10
-            media_id_str = request.POST["media_id_str"]
-            operation = save_favorite_media(request.user, media_id_str)
-            return JsonResponse({'result': operation}, status=200)
-        else:
-            # favorite more than 10, check user active status
-            user_information = UserInformation.objects.filter(information_user=request.user)[0]
-            if user_information.is_active:
-                # user is active, save the pic
-                media_id_str = request.POST["media_id_str"]
-                operation = save_favorite_media(request.user, media_id_str)
-                return JsonResponse({'result': operation}, status=200)
-            else:
-                # user is not active, can't save the pic
-                return JsonResponse({'result': 'refuse', 'message': '因服务器空间原因，只能收藏10个'}, status=200)
+        # favorite_count = Favorite.objects.filter(favorite_user=request.user).count()
+        # if favorite_count < 10000000000:
+        # favorite less than 10
+        media_id_str = request.POST["media_id_str"]
+        operation = save_favorite_media(request.user, media_id_str)
+        return JsonResponse({'result': operation}, status=200)
+        # else:
+        #     # favorite more than 10, check user active status
+        #     user_information = UserInformation.objects.filter(information_user=request.user)[0]
+        #     if user_information.is_active:
+        #         # user is active, save the pic
+        #         media_id_str = request.POST["media_id_str"]
+        #         operation = save_favorite_media(request.user, media_id_str)
+        #         return JsonResponse({'result': operation}, status=200)
+        #     else:
+        #         # user is not active, can't save the pic
+        #         return JsonResponse({'result': 'refuse', 'message': '因服务器空间原因，只能收藏10个'}, status=200)
     else:
         # not logged in, redirect to login page
         return JsonResponse({'result': 'needLogin'}, status=200)
